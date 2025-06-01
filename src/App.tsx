@@ -5,14 +5,26 @@ import { olist } from './commands/olist'
 import type { Commands } from '@uiw/react-markdown-editor/cjs/components/ToolBar'
 import remarkBreaks from 'remark-breaks'
 import './App.css'
+import remarkCollapse from './remark-plugins/remark-collapse'
 
-const code = `# title\n\nHello World!\n\n`
+const code = `# title
+
+{{collapse(テスト)
+
+Hello World!
+
+これは折りたたまれるコンテンツです。
+
+}}
+
+`
 
 export default function App() {
   const [markdownVal, setMarkdownVal] = useState(code)
-  console.log('markdownVal:', markdownVal)
 
   const customCommands: Commands[] = [
+    'undo',
+    'redo',
     'bold',
     'italic',
     'underline',
@@ -37,7 +49,7 @@ export default function App() {
         }}
         toolbars={customCommands}
         previewProps={{
-          remarkPlugins: [remarkBreaks],
+          remarkPlugins: [remarkBreaks, remarkCollapse],
         }}
         style={{
           fontSize: '16px',
