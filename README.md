@@ -1,54 +1,70 @@
-# React + TypeScript + Vite
+# Redmine Markdown Editor Chrome Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Chrome extension that adds a modern Markdown editor overlay to Redmine textareas, providing a better writing experience with live preview and enhanced editing features.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Markdown Editor Overlay**: Replaces Redmine's default textarea with a modern markdown editor
+- **Live Preview**: Switch between edit and preview modes seamlessly
+- **Drag & Drop Support**: Upload images by dragging them onto the editor
+- **Enhanced Toolbar**: Rich formatting tools for better markdown authoring
+- **Seamless Integration**: Works with existing Redmine workflows and forms
+- **Dynamic Detection**: Automatically detects and enhances textareas on all Redmine pages
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone this repository
+2. Install dependencies: `npm install`
+3. Build the extension: `npm run build`
+4. Load the `dist/` folder as an unpacked extension in Chrome
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development mode (hot reload)
+npm run dev
+
+# Build for production
+npm run build
+
+# Type checking
+npm run type-check
+
+# Lint code
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Architecture
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The extension follows SOLID principles with a clean, modular architecture:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
+src/content/
+├── components/          # React components
+├── hooks/              # Custom React hooks
+├── services/           # Business logic services
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions and constants
+└── RedmineMarkdownExtension.ts  # Main orchestrator
+```
+
+### Key Components
+
+- **RedmineMarkdownExtension**: Main orchestrator managing the extension lifecycle
+- **MarkdownOverlay**: React component providing the markdown editor interface
+- **RedmineService**: Handles Redmine-specific operations and detection
+- **TextareaProcessor**: Manages textarea enhancement and cleanup
+- **DOMObserver**: Monitors for dynamically added textareas
+
+## Compatibility
+
+- **Redmine**: All modern versions
+- **Browsers**: Chrome, Edge, and other Chromium-based browsers
+- **Pages**: Issues, Wiki, Notes, and any page with `.wiki-edit` textareas
+
+## License
+
+MIT License
