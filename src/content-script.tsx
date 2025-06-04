@@ -1,23 +1,16 @@
-import { RedmineMarkdownExtension } from './content/RedmineMarkdownExtension'
+import { initialize, destroy } from './content/RedmineMarkdownExtension'
 import './index.css'
 
-// Create and initialize the extension
-const extension = new RedmineMarkdownExtension()
-
-// Initialize when DOM is ready
+// Initialize the extension when ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    extension.initialize()
-  })
+  document.addEventListener('DOMContentLoaded', () => initialize())
 } else {
   // DOM is already loaded
-  extension.initialize()
+  initialize()
 }
 
 // Cleanup on page unload
-window.addEventListener('beforeunload', () => {
-  extension.destroy()
-})
+window.addEventListener('beforeunload', () => destroy())
 
 // Handle navigation in SPAs
 let currentUrl = window.location.href
@@ -26,7 +19,7 @@ const checkForNavigation = () => {
     currentUrl = window.location.href
     // Re-initialize after navigation
     setTimeout(() => {
-      extension.initialize()
+      initialize()
     }, 500)
   }
 }

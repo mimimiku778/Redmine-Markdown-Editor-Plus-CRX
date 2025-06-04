@@ -1,68 +1,45 @@
 import React from 'react'
 import { createRoot, type Root } from 'react-dom/client'
-import type { ITextareaProcessor } from '../types'
 import { MarkdownOverlay } from '../components/MarkdownOverlay'
 import { MARKDOWN_OVERLAY_ATTRIBUTE } from '../utils/constants'
-import { RedmineService } from './RedmineService'
+import { isTextareaInContext } from './RedmineService'
 
-export class TextareaProcessor implements ITextareaProcessor {
-  constructor(
-    private redmineService: RedmineService = new RedmineService(),
-    private processedTextareas: Map<
-      HTMLTextAreaElement,
-      { wrapper: HTMLDivElement; root: Root }
-    > = new Map()
-  ) {}
+// Module-scoped processed state for overlays
+const processedMap = new Map<HTMLTextAreaElement, { wrapper: HTMLDivElement; root: Root }>()
 
-  canProcess(textarea: HTMLTextAreaElement): boolean {
-    return (
-      !this.isAlreadyProcessed(textarea) && this.redmineService.isTextareaInRedmineContext(textarea)
-    )
-  }
+const isAlreadyProcessed = (textarea: HTMLTextAreaElement): boolean =>
+  textarea.getAttribute(MARKDOWN_OVERLAY_ATTRIBUTE) === 'true'
 
-  process(textarea: HTMLTextAreaElement): void {
-    if (!this.canProcess(textarea)) {
-      return
-    }
+/** Determine if this textarea should get a markdown overlay */
+export const canProcess = (textarea: HTMLTextAreaElement): boolean =>
+  !isAlreadyProcessed(textarea) && isTextareaInContext(textarea)
 
-    const { wrapper, root } = this.createMarkdownOverlay(textarea)
-    this.processedTextareas.set(textarea, { wrapper, root })
+/** Process a textarea by hiding it and rendering a MarkdownOverlay */
+export const processTextarea = (textarea: HTMLTextAreaElement): void => {
+  if (!canProcess(textarea)) return
+  // Create wrapper
+  const wrapper = document.createElement('div')
+  textarea.style.display = 'none'
+  textarea.parentNode?.insertBefore(wrapper, textarea.nextSibling)
+  // Render overlay
+  const root = createRoot(wrapper)
+  root.render(React.createElement(MarkdownOverlay, { textarea }))
+  // Track processed
+  processedMap.set(textarea, { wrapper, root })
+  textarea.setAttribute(MARKDOWN_OVERLAY_ATTRIBUTE, 'true')
+}
 
-    // Mark as processed
-    textarea.setAttribute(MARKDOWN_OVERLAY_ATTRIBUTE, 'true')
-  }
+/** Cleanup an overlay for a given textarea */
+export const cleanupTextarea = (textarea: HTMLTextAreaElement): void => {
+  const entry = processedMap.get(textarea)
+  if (!entry) return
+  entry.root.unmount()
+  entry.wrapper.remove()
+  processedMap.delete(textarea)
+  textarea.removeAttribute(MARKDOWN_OVERLAY_ATTRIBUTE)
+}
 
-  cleanup(textarea: HTMLTextAreaElement): void {
-    const processed = this.processedTextareas.get(textarea)
-    if (processed) {
-      processed.root.unmount()
-      processed.wrapper.remove()
-      this.processedTextareas.delete(textarea)
-      textarea.removeAttribute(MARKDOWN_OVERLAY_ATTRIBUTE)
-    }
-  }
-
-  private isAlreadyProcessed(textarea: HTMLTextAreaElement): boolean {
-    return textarea.getAttribute(MARKDOWN_OVERLAY_ATTRIBUTE) === 'true'
-  }
-
-  private createMarkdownOverlay(textarea: HTMLTextAreaElement): {
-    wrapper: HTMLDivElement
-    root: Root
-  } {
-    // Create wrapper that will completely replace the textarea visually
-    const wrapper = document.createElement('div')
-
-    // Hide original textarea but keep it in DOM for form functionality
-    textarea.style.display = 'none'
-
-    // Insert wrapper after textarea
-    textarea.parentNode?.insertBefore(wrapper, textarea.nextSibling)
-
-    // Render React component directly in wrapper
-    const root = createRoot(wrapper)
-    root.render(React.createElement(MarkdownOverlay, { textarea }))
-
-    return { wrapper, root }
-  }
+/** Cleanup all overlays (optional) */
+export const cleanupAll = (): void => {
+  processedMap.forEach((_, textarea) => cleanupTextarea(textarea))
 }
