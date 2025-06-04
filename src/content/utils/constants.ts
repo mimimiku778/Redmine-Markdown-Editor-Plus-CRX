@@ -10,8 +10,7 @@ export const REDMINE_SELECTORS: RedmineSelectors = {
 }
 
 export const OVERLAY_CONFIG: OverlayConfig = {
-  minHeight: 300,
-  zIndex: 1000,
+  minHeight: 200,
   backgroundColor: 'white',
 }
 

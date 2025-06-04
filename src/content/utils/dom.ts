@@ -4,18 +4,18 @@ import { REDMINE_SELECTORS } from './constants'
 export class DOMUtils {
   static findTextareas(selectors: string[]): HTMLTextAreaElement[] {
     const textareas: HTMLTextAreaElement[] = []
-    
-    selectors.forEach(selector => {
+
+    selectors.forEach((selector) => {
       const elements = document.querySelectorAll(selector) as NodeListOf<HTMLTextAreaElement>
       textareas.push(...Array.from(elements))
     })
-    
+
     return textareas
   }
 
   static hideElements(selector: string): void {
     const elements = document.querySelectorAll(selector)
-    elements.forEach(element => {
+    elements.forEach((element) => {
       const htmlElement = element as HTMLElement
       htmlElement.style.display = 'none'
     })
@@ -33,7 +33,7 @@ export class DOMUtils {
     wrapper.style.width = '100%'
     wrapper.style.height = `${minHeight}px`
     wrapper.style.minHeight = `${minHeight}px`
-    
+
     return wrapper
   }
 
@@ -66,20 +66,23 @@ export class DOMUtils {
         tabsContainer.querySelector(REDMINE_SELECTORS.previewTab),
         tabsContainer.querySelector('li.selected a[onclick*="preview"]'),
         tabsContainer.querySelector('.selected[onclick*="preview"]'),
-        ...Array.from(tabsContainer.querySelectorAll('a')).filter(a => 
-          a.textContent?.toLowerCase().includes('preview') || 
-          a.getAttribute('onclick')?.includes('preview')
+        ...Array.from(tabsContainer.querySelectorAll('a')).filter(
+          (a) =>
+            a.textContent?.toLowerCase().includes('preview') ||
+            a.getAttribute('onclick')?.includes('preview')
         ),
       ].filter(Boolean)
 
       if (previewIndicators.length > 0) {
         // Check if any preview indicator is active
-        const isPreviewActive = previewIndicators.some(indicator => {
+        const isPreviewActive = previewIndicators.some((indicator) => {
           const element = indicator as HTMLElement
-          return element.classList.contains('selected') ||
-                 element.parentElement?.classList.contains('selected') ||
-                 element.parentElement?.classList.contains('current') ||
-                 element.classList.contains('current')
+          return (
+            element.classList.contains('selected') ||
+            element.parentElement?.classList.contains('selected') ||
+            element.parentElement?.classList.contains('current') ||
+            element.classList.contains('current')
+          )
         })
 
         return { isPreviewMode: isPreviewActive, tabsContainer }
@@ -93,13 +96,19 @@ export class DOMUtils {
     if (target.tagName === 'A') {
       const text = target.textContent?.toLowerCase() || ''
       const onclick = target.getAttribute('onclick') || ''
-      return text.includes('preview') || text.includes('edit') ||
-             onclick.includes('preview') || onclick.includes('edit')
+      return (
+        text.includes('preview') ||
+        text.includes('edit') ||
+        onclick.includes('preview') ||
+        onclick.includes('edit')
+      )
     }
     return false
   }
 
   static findEditorTextarea(element: HTMLElement): HTMLTextAreaElement | null {
-    return element.closest('.w-md-editor')?.querySelector('textarea') as HTMLTextAreaElement || null
+    return (
+      (element.closest('.w-md-editor')?.querySelector('textarea') as HTMLTextAreaElement) || null
+    )
   }
 }

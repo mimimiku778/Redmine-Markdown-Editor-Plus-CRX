@@ -3,12 +3,13 @@ import MarkdownEditor from '@uiw/react-markdown-editor'
 import type { Commands } from '@uiw/react-markdown-editor/cjs/components/ToolBar'
 import remarkBreaks from 'remark-breaks'
 import remarkCollapse from '../remark-plugins/remark-collapse'
-import { ulist } from '../commands/ulist'
-import { olist } from '../commands/olist'
+import { ulist } from '../custom-commands/ulist'
+import { olist } from '../custom-commands/olist'
 import { useTabState } from '../hooks/useTabState'
 import { useTextareaSync } from '../hooks/useTextareaSync'
 import { useDragAndDrop } from '../hooks/useDragAndDrop'
 import { OVERLAY_CONFIG } from '../utils/constants'
+import { customKeymap } from '../extensions/customKeymap'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
@@ -37,19 +38,16 @@ export function MarkdownOverlay({ textarea }: MarkdownOverlayProps) {
   const { value, updateValue } = useTextareaSync(textarea)
   const { handleDragOver, handleDrop } = useDragAndDrop(textarea)
 
-  // プレビューモード時は完全に非表示（高さも0に）
-  if (isPreviewMode) {
-    return <div style={{ display: 'none', height: 0 }} />
-  }
-
   return (
     <div
+      data-color-mode="light"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       style={{
         width: '100%',
         height: '100%',
         minHeight: `${OVERLAY_CONFIG.minHeight}px`,
+        display: isPreviewMode ? 'none' : 'block',
       }}
     >
       <MarkdownEditor
@@ -62,7 +60,9 @@ export function MarkdownOverlay({ textarea }: MarkdownOverlayProps) {
         style={{
           fontSize: '16px',
           height: '100%',
+          minHeight: `${OVERLAY_CONFIG.minHeight}px`,
         }}
+        reExtensions={[customKeymap]}
       />
     </div>
   )

@@ -15,7 +15,6 @@ export interface DragState {
 
 export interface OverlayConfig {
   minHeight: number
-  zIndex: number
   backgroundColor: string
 }
 
