@@ -1,6 +1,4 @@
-import { isRedminePage, findTextareas, hideToolbars } from './services/RedmineService'
-import { processTextarea, cleanupAll } from './services/TextareaProcessor'
-import { observeDOM } from './services/DOMObserver'
+import { isRedminePage, findTextareas, hideToolbars, processTextarea, cleanupAll, observeDOM } from './services'
 
 // Module-scoped state
 let initialized = false

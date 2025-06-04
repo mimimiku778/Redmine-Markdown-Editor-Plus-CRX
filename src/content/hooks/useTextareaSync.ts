@@ -1,5 +1,5 @@
 import React from 'react'
-import { SYNC_INTERVAL_MS } from '../utils/constants'
+import { SYNC_INTERVAL_MS } from '../utils'
 
 export function useTextareaSync(textarea: HTMLTextAreaElement) {
   const [value, setValue] = React.useState(textarea.value)

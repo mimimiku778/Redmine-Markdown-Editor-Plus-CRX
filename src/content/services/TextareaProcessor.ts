@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { MarkdownOverlay } from '../components/MarkdownOverlay'
-import { MARKDOWN_OVERLAY_ATTRIBUTE } from '../utils/constants'
+import { MARKDOWN_OVERLAY_ATTRIBUTE } from '../utils'
 import { isTextareaInContext } from './RedmineService'
 
 // Module-scoped processed state for overlays

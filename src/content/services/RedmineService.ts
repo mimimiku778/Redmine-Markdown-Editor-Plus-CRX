@@ -1,5 +1,4 @@
-import { DOMUtils } from '../utils/dom'
-import { REDMINE_SELECTORS } from '../utils/constants'
+import { DOMUtils, REDMINE_SELECTORS } from '../utils'
 
 /** Check if current page is a Redmine page */
 export const isRedminePage = (): boolean =>
