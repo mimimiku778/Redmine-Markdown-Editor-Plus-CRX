@@ -1,5 +1,5 @@
 import type { TabState } from '../types'
-import { REDMINE_SELECTORS } from './constants'
+import { REDMINE_SELECTORS } from '../constants'
 
 export class DOMUtils {
   static findTextareas(selectors: string[]): HTMLTextAreaElement[] {
@@ -50,18 +50,16 @@ export class DOMUtils {
   }
 
   static checkTabState(textarea: HTMLTextAreaElement): TabState {
-    // Look for tab containers in multiple ways
     const possibleContainers = [
       textarea.closest('.jstBlock')?.querySelector(REDMINE_SELECTORS.jstTabs),
       textarea.closest('form')?.querySelector(REDMINE_SELECTORS.jstTabs),
       textarea.closest('.box')?.querySelector(REDMINE_SELECTORS.jstTabs),
-      document.querySelector('.jstTabs'), // Fallback for dynamically loaded content
+      document.querySelector('.jstTabs'),
     ].filter(Boolean)
 
     for (const tabsContainer of possibleContainers) {
       if (!tabsContainer) continue
 
-      // Look for preview indicators in multiple ways
       const previewIndicators = [
         tabsContainer.querySelector(REDMINE_SELECTORS.previewTab),
         tabsContainer.querySelector('li.selected a[onclick*="preview"]'),
@@ -74,7 +72,6 @@ export class DOMUtils {
       ].filter(Boolean)
 
       if (previewIndicators.length > 0) {
-        // Check if any preview indicator is active
         const isPreviewActive = previewIndicators.some((indicator) => {
           const element = indicator as HTMLElement
           return (

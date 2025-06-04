@@ -4,7 +4,7 @@ import remarkBreaks from 'remark-breaks'
 import { remarkCollapse } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
 import { useTabState, useTextareaSync, useDragAndDrop } from '../hooks'
-import { OVERLAY_CONFIG } from '../utils'
+import { OVERLAY_CONFIG } from '../constants'
 import { customKeymap } from '../extensions'
 
 interface MarkdownOverlayProps {

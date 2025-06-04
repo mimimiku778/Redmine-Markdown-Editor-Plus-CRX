@@ -1,5 +1,5 @@
 import React from 'react'
-import { DOMUtils } from '../utils'
+import { DOMUtils } from '../services'
 
 export function useTabState(textarea: HTMLTextAreaElement): boolean {
   const [isPreviewMode, setIsPreviewMode] = React.useState(false)

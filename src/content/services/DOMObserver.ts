@@ -1,5 +1,3 @@
-import type { IDOMObserver } from '../types'
-
 /**
  * Observe additions to the DOM subtree and invoke callback with added elements.
  * Returns a function to stop observing.
