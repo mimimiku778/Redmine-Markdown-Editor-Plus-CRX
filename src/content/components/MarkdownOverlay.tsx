@@ -1,11 +1,11 @@
 import MarkdownEditor from '@uiw/react-markdown-editor'
 import type { Commands } from '@uiw/react-markdown-editor/cjs/components/ToolBar'
 import remarkBreaks from 'remark-breaks'
-import remarkCollapse from '../remark-plugins/remark-collapse'
+import { remarkCollapse } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
 import { useTabState, useTextareaSync, useDragAndDrop } from '../hooks'
 import { OVERLAY_CONFIG } from '../utils'
-import { customKeymap } from '../extensions/customKeymap'
+import { customKeymap } from '../extensions'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement

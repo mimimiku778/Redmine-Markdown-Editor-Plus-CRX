@@ -1,0 +1,1 @@
+export { default as remarkCollapse } from './remark-collapse'
