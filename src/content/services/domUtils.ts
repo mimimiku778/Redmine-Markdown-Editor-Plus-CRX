@@ -1,4 +1,3 @@
-import type { TabState } from '../types'
 import { REDMINE_SELECTORS } from '../constants'
 
 export class DOMUtils {
@@ -49,7 +48,10 @@ export class DOMUtils {
     wrapper.appendChild(textarea)
   }
 
-  static checkTabState(textarea: HTMLTextAreaElement): TabState {
+  static checkTabState(textarea: HTMLTextAreaElement): {
+    isPreviewMode: boolean
+    tabsContainer: Element | null
+  } {
     const possibleContainers = [
       textarea.closest('.jstBlock')?.querySelector(REDMINE_SELECTORS.jstTabs),
       textarea.closest('form')?.querySelector(REDMINE_SELECTORS.jstTabs),
