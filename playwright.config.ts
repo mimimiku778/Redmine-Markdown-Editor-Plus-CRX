@@ -9,7 +9,6 @@ export default defineConfig({
   reporter: 'list',
   use: {
     trace: 'on-first-retry',
-    headless: process.env.CI ? true : false,
   },
   webServer: {
     command: 'npx http-server tests/e2e/mocks -p 8080 --cors',
