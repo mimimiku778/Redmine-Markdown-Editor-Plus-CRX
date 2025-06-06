@@ -11,12 +11,19 @@ test.describe('Redmine Markdown Editor Extension', () => {
     console.log('Extension path:', extensionPath)
 
     context = await chromium.launchPersistentContext('./test-user-data', {
-      headless: true,
+      headless: process.env.CI ? true : false,
       args: [
         `--load-extension=${extensionPath}`,
         `--disable-extensions-except=${extensionPath}`,
         '--disable-web-security',
         '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-first-run',
+        '--no-default-browser-check',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
       ],
     })
 
@@ -38,7 +45,7 @@ test.describe('Redmine Markdown Editor Extension', () => {
     await page.goto('http://localhost:8080/redmine-issue.html')
 
     // Wait for page load and extension to process
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(process.env.CI ? 5000 : 2000)
   })
 
   test.afterAll(async () => {
@@ -88,7 +95,7 @@ test.describe('Redmine Markdown Editor Extension', () => {
       const textarea = document.querySelector('#issue_notes') as HTMLTextAreaElement
       return {
         hasMarkdownOverlay: textarea?.hasAttribute('data-markdown-overlay'),
-        markdownEditorExists: !!document.querySelector('.w-md-editor'),
+        markdownEditorExists: !!document.querySelector('.md-editor'),
         textareaHidden: textarea ? getComputedStyle(textarea).opacity === '0' : false,
       }
     })
