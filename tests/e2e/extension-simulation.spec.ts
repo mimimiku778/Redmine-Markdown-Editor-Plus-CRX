@@ -11,7 +11,7 @@ test.describe('Redmine Markdown Editor Extension', () => {
     console.log('Extension path:', extensionPath)
 
     context = await chromium.launchPersistentContext('./test-user-data', {
-      headless: false,
+      headless: true,
       args: [
         `--load-extension=${extensionPath}`,
         `--disable-extensions-except=${extensionPath}`,
