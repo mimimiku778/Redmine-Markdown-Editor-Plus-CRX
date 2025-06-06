@@ -1,6 +1,8 @@
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useRef, useCallback } from 'react'
 import MarkdownEditor from '@uiw/react-markdown-editor'
-import type { Commands } from '@uiw/react-markdown-editor/cjs/components/ToolBar'
+import type { Commands } from '@uiw/react-markdown-editor/esm/components/ToolBar'
+import type { EditorView } from '@codemirror/view'
+import { ViewPlugin } from '@codemirror/view'
 import remarkBreaks from 'remark-breaks'
 import { remarkCollapse } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
@@ -47,7 +49,8 @@ const DEFAULT_COMMANDS: Commands[] = [
 const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const isPreviewMode = useTabState(textarea)
   const { value, updateValue } = useTextareaSync(textarea)
-  const { handleDragOver, handleDrop } = useDragAndDrop(textarea)
+  const { handleDragOver, handleDrop } = useDragAndDrop()
+  const editorViewRef = useRef<EditorView | null>(null)
 
   const wrapperStyles = useMemo<WrapperStyles>(() => ({
     width: '100%',
@@ -63,14 +66,37 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   }), [])
 
   const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse], [])
-  const extensions = useMemo(() => [customKeymap], [])
+  
+  // Create a view plugin to capture the editor view
+  const viewCapturePlugin = useMemo(() => ViewPlugin.fromClass(
+    class {
+      constructor(view: EditorView) {
+        editorViewRef.current = view
+        logger.debug('EditorView captured via ViewPlugin')
+      }
+      destroy() {
+        editorViewRef.current = null
+      }
+    }
+  ), [])
+  
+  const extensions = useMemo(() => [customKeymap, viewCapturePlugin], [viewCapturePlugin])
+
+  // Handle drop event with editorView access
+  const handleDropWithEditor = useCallback((event: React.DragEvent) => {
+    if (editorViewRef.current) {
+      handleDrop(event, editorViewRef.current, updateValue)
+    } else {
+      logger.warn('EditorView not available for drag and drop')
+    }
+  }, [handleDrop, updateValue])
 
   logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
 
   return (
     <div
       data-color-mode="light"
-      onDrop={handleDrop}
+      onDrop={handleDropWithEditor}
       onDragOver={handleDragOver}
       style={wrapperStyles}
     >
