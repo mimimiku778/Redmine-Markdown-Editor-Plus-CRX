@@ -25,6 +25,7 @@ dist-ssr
 
 # Playwright
 /test-results/
+/test-user-data/
 /playwright-report/
 /playwright/.cache/
 /tests/e2e/screenshots/
