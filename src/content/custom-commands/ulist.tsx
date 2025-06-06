@@ -23,7 +23,7 @@ export const ulist: ICommand = {
     const startLine = doc.lineAt(selection.from);
     const endLine = doc.lineAt(selection.to);
     
-    let changes = [];
+    const changes = [];
     let totalOffset = 0;
     
     // Process each line in the selection

@@ -1,17 +1,32 @@
+import { memo, useMemo } from 'react'
 import MarkdownEditor from '@uiw/react-markdown-editor'
 import type { Commands } from '@uiw/react-markdown-editor/cjs/components/ToolBar'
 import remarkBreaks from 'remark-breaks'
 import { remarkCollapse } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
 import { useTabState, useTextareaSync, useDragAndDrop } from '../hooks'
-import { OVERLAY_CONFIG } from '../constants'
+import { CONFIG } from '../../config'
 import { customKeymap } from '../extensions'
+import { logger } from '../../utils/logger'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
 }
 
-const customCommands: Commands[] = [
+interface EditorStyles {
+  fontSize: string
+  height: string
+  minHeight: string
+}
+
+interface WrapperStyles {
+  width: string
+  height: string
+  minHeight: string
+  display: string
+}
+
+const DEFAULT_COMMANDS: Commands[] = [
   'undo',
   'redo',
   'bold',
@@ -29,37 +44,49 @@ const customCommands: Commands[] = [
   'image',
 ]
 
-export function MarkdownOverlay({ textarea }: MarkdownOverlayProps) {
+const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const isPreviewMode = useTabState(textarea)
   const { value, updateValue } = useTextareaSync(textarea)
   const { handleDragOver, handleDrop } = useDragAndDrop(textarea)
+
+  const wrapperStyles = useMemo<WrapperStyles>(() => ({
+    width: '100%',
+    height: '100%',
+    minHeight: `${CONFIG.overlay.minHeight}px`,
+    display: isPreviewMode ? 'none' : 'block',
+  }), [isPreviewMode])
+
+  const editorStyles = useMemo<EditorStyles>(() => ({
+    fontSize: '16px',
+    height: '100%',
+    minHeight: `${CONFIG.overlay.minHeight}px`,
+  }), [])
+
+  const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse], [])
+  const extensions = useMemo(() => [customKeymap], [])
+
+  logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
 
   return (
     <div
       data-color-mode="light"
       onDrop={handleDrop}
       onDragOver={handleDragOver}
-      style={{
-        width: '100%',
-        height: '100%',
-        minHeight: `${OVERLAY_CONFIG.minHeight}px`,
-        display: isPreviewMode ? 'none' : 'block',
-      }}
+      style={wrapperStyles}
     >
       <MarkdownEditor
         value={value}
         onChange={updateValue}
-        toolbars={customCommands}
+        toolbars={DEFAULT_COMMANDS}
         previewProps={{
-          remarkPlugins: [remarkBreaks, remarkCollapse],
+          remarkPlugins,
         }}
-        style={{
-          fontSize: '16px',
-          height: '100%',
-          minHeight: `${OVERLAY_CONFIG.minHeight}px`,
-        }}
-        reExtensions={[customKeymap]}
+        style={editorStyles}
+        reExtensions={extensions}
       />
     </div>
   )
 }
+
+// Memoized to prevent unnecessary re-renders
+export const MarkdownOverlay = memo(MarkdownOverlayComponent)

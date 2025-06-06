@@ -1,28 +1,58 @@
 import { initialize, destroy } from './content/RedmineMarkdownExtension'
+import { logger } from './utils/logger'
 import './index.css'
 
 // Initialize the extension when ready
+const initExtension = async () => {
+  try {
+    await initialize()
+  } catch (error) {
+    logger.error('Failed to initialize extension', error)
+  }
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => initialize())
+  document.addEventListener('DOMContentLoaded', initExtension)
 } else {
   // DOM is already loaded
-  initialize()
+  initExtension()
 }
 
 // Cleanup on page unload
-window.addEventListener('beforeunload', () => destroy())
+window.addEventListener('beforeunload', () => {
+  try {
+    destroy()
+  } catch (error) {
+    logger.error('Error during cleanup', error)
+  }
+})
 
 // Handle navigation in SPAs
 let currentUrl = window.location.href
-const checkForNavigation = () => {
+const NAVIGATION_CHECK_INTERVAL = 1000
+const REINIT_DELAY = 500
+
+const checkForNavigation = async () => {
   if (window.location.href !== currentUrl) {
+    const oldUrl = currentUrl
     currentUrl = window.location.href
-    // Re-initialize after navigation
-    setTimeout(() => {
-      initialize()
-    }, 500)
+    
+    logger.info(`Navigation detected: ${oldUrl} -> ${currentUrl}`)
+    
+    // Clean up and re-initialize after navigation
+    try {
+      destroy()
+      setTimeout(async () => {
+        await initExtension()
+      }, REINIT_DELAY)
+    } catch (error) {
+      logger.error('Error handling navigation', error)
+    }
   }
 }
 
 // Check for URL changes periodically (for SPAs without proper navigation events)
-setInterval(checkForNavigation, 1000)
+setInterval(checkForNavigation, NAVIGATION_CHECK_INTERVAL)
+
+// Also listen for popstate events
+window.addEventListener('popstate', checkForNavigation)

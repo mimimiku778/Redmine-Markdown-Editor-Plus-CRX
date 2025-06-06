@@ -11,6 +11,7 @@ const manifest = defineManifest({
     {
       matches: ['<all_urls>'],
       js: ['src/content-script.tsx'],
+      run_at: 'document_end',
     },
   ],
   permissions: ['activeTab'],

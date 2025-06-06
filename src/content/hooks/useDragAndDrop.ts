@@ -1,54 +1,50 @@
-import React from 'react'
+import { useCallback } from 'react'
+import { logger } from '../../utils/logger'
+import { DOMUtils } from '../services'
 
-export function useDragAndDrop(
-  textarea: HTMLTextAreaElement
-): {
+interface DragAndDropHandlers {
   handleDragOver: (event: React.DragEvent) => void
   handleDrop: (event: React.DragEvent) => void
-} {
+}
 
-  // より正確なカーソル位置計算
-  const getTextPositionFromMouseEvent = React.useCallback((event: React.DragEvent) => {
-    const editorTextarea = document.querySelector('.w-md-editor textarea') as HTMLTextAreaElement
+const POSITION_CALCULATION_DELAY = 10
+const RESTORE_STYLE_DELAY = 50
+
+export function useDragAndDrop(textarea: HTMLTextAreaElement): DragAndDropHandlers {
+  // Calculate text position from mouse coordinates
+  const getTextPositionFromMouseEvent = useCallback((event: React.DragEvent): number => {
+    const editorTextarea = DOMUtils.findEditorTextarea(textarea)
     if (!editorTextarea) {
-      console.log('[DragDrop] Editor textarea not found')
+      logger.warn('Editor textarea not found')
       return 0
     }
 
-    console.log('[DragDrop] Mouse position:', { x: event.clientX, y: event.clientY })
-
-    // エディタのバウンディングボックスを取得
     const rect = editorTextarea.getBoundingClientRect()
     const relativeX = event.clientX - rect.left
     const relativeY = event.clientY - rect.top
 
-    console.log('[DragDrop] Editor bounds:', rect)
-    console.log('[DragDrop] Relative position:', { x: relativeX, y: relativeY })
-
-    // 範囲内チェック
+    // Check if mouse is within bounds
     if (relativeX < 0 || relativeX > rect.width || relativeY < 0 || relativeY > rect.height) {
-      console.log('[DragDrop] Mouse outside editor bounds')
+      logger.debug('Mouse outside editor bounds')
       return editorTextarea.selectionStart || 0
     }
 
     try {
-      // 新しいAPIを使用してカーソル位置を計算
+      // Try to use modern API for accurate position
       if (document.caretRangeFromPoint) {
         const range = document.caretRangeFromPoint(event.clientX, event.clientY)
         if (range && editorTextarea.contains(range.startContainer)) {
           const textNode = range.startContainer
           const offset = range.startOffset
           
-          // テキストノード内のオフセットをtextarea全体のオフセットに変換
           if (textNode.nodeType === Node.TEXT_NODE) {
-            const beforeText = editorTextarea.value.substring(0, offset)
-            console.log('[DragDrop] Calculated position:', offset, 'text before:', beforeText.slice(-10))
+            logger.debug(`Calculated position: ${offset}`)
             return offset
           }
         }
       }
 
-      // フォールバック: 行ベースの計算
+      // Fallback: line-based calculation
       const lineHeight = parseInt(getComputedStyle(editorTextarea).lineHeight) || 20
       const lines = editorTextarea.value.split('\n')
       const targetLine = Math.floor(relativeY / lineHeight)
@@ -59,101 +55,128 @@ export function useDragAndDrop(
           position += lines[i].length + 1 // +1 for newline
         }
         
-        // 行内の位置を推定
-        const charWidth = 8 // 平均文字幅の推定
-        const charInLine = Math.floor(relativeX / charWidth)
+        // Estimate position within line
+        const avgCharWidth = 8 // Average character width estimation
+        const charInLine = Math.floor(relativeX / avgCharWidth)
         position += Math.min(charInLine, lines[targetLine].length)
         
-        console.log('[DragDrop] Line-based calculation:', { line: targetLine, position })
+        logger.debug(`Line-based position: line ${targetLine}, position ${position}`)
         return position
       }
     } catch (error) {
-      console.error('[DragDrop] Error calculating position:', error)
+      logger.error('Error calculating position', error)
     }
     
-    // 最終フォールバック
-    console.log('[DragDrop] Using fallback position:', editorTextarea.selectionStart)
+    // Final fallback
     return editorTextarea.selectionStart || 0
-  }, [])
+  }, [textarea])
 
-  const handleDragOver = React.useCallback((event: React.DragEvent) => {
-    if (event.dataTransfer && event.dataTransfer.types.includes('Files')) {
+  const handleDragOver = useCallback((event: React.DragEvent) => {
+    if (event.dataTransfer?.types.includes('Files')) {
       event.preventDefault()
       event.dataTransfer.dropEffect = 'copy'
       
-      console.log('[DragDrop] Drag over detected')
-      
-      // カーソル位置の更新をリアルタイムで行う
-      const editorTextarea = document.querySelector('.w-md-editor textarea') as HTMLTextAreaElement
+      // Update cursor position in real-time
+      const editorTextarea = DOMUtils.findEditorTextarea(textarea)
       if (editorTextarea) {
         const textPosition = getTextPositionFromMouseEvent(event)
         
-        // エディタにフォーカスしてカーソル位置を更新
+        // Focus and update cursor position
         editorTextarea.focus()
         editorTextarea.setSelectionRange(textPosition, textPosition)
         
-        console.log('[DragDrop] Updated cursor position to:', textPosition)
+        logger.debug(`Updated cursor position to: ${textPosition}`)
       }
     }
-  }, [getTextPositionFromMouseEvent])
+  }, [textarea, getTextPositionFromMouseEvent])
 
-  const handleDrop = React.useCallback((event: React.DragEvent) => {
-    if (event.dataTransfer && event.dataTransfer.types.includes('Files')) {
-      event.preventDefault()
-      
-      console.log('[DragDrop] Drop detected', event.dataTransfer.files)
-      
-      const dropPosition = getTextPositionFromMouseEvent(event)
-      console.log('[DragDrop] Final drop position:', dropPosition)
-      
-      // Redmineのネイティブドラッグ&ドロップ機能を活用
-      // エディタのカーソル位置を設定
-      const editorTextarea = document.querySelector('.w-md-editor textarea') as HTMLTextAreaElement
-      if (editorTextarea) {
-        editorTextarea.focus()
-        editorTextarea.setSelectionRange(dropPosition, dropPosition)
-      }
-      
-      // オリジナルtextareaに同期してRedmineの処理を引き継ぐ
-      textarea.focus()
-      textarea.setSelectionRange(dropPosition, dropPosition)
-      
-      // 一時的にオリジナルtextareaを表示してドロップイベントを転送
-      const originalDisplay = textarea.style.display
-      textarea.style.display = 'block'
-      textarea.style.position = 'absolute'
-      textarea.style.top = '0'
-      textarea.style.left = '0'
-      textarea.style.zIndex = '9999'
-      
-      // クローンイベントを作成
-      const clonedEvent = new DragEvent('drop', {
-        bubbles: true,
-        cancelable: true,
-        dataTransfer: event.dataTransfer,
-        clientX: event.clientX,
-        clientY: event.clientY,
-        view: window
-      })
-      
-      // イベントを転送
-      setTimeout(() => {
-        textarea.dispatchEvent(clonedEvent)
-        
-        // 元の状態に戻す
-        setTimeout(() => {
-          textarea.style.display = originalDisplay
-          textarea.style.position = ''
-          textarea.style.top = ''
-          textarea.style.left = ''
-          textarea.style.zIndex = ''
-        }, 50)
-      }, 10)
+  const handleDrop = useCallback((event: React.DragEvent) => {
+    if (!event.dataTransfer?.types.includes('Files')) {
+      return
     }
+
+    event.preventDefault()
+    
+    const files = Array.from(event.dataTransfer.files)
+    logger.info(`Drop detected: ${files.length} files`)
+    
+    const dropPosition = getTextPositionFromMouseEvent(event)
+    
+    // Update cursor position in editor
+    const editorTextarea = DOMUtils.findEditorTextarea(textarea)
+    if (editorTextarea) {
+      editorTextarea.focus()
+      editorTextarea.setSelectionRange(dropPosition, dropPosition)
+    }
+    
+    // Sync cursor position to original textarea
+    textarea.focus()
+    textarea.setSelectionRange(dropPosition, dropPosition)
+    
+    // Store current value for later comparison
+    const originalValue = textarea.value
+    
+    // Temporarily show original textarea to handle native Redmine drop
+    const originalStyles = {
+      display: textarea.style.display,
+      position: textarea.style.position,
+      opacity: textarea.style.opacity,
+      pointerEvents: textarea.style.pointerEvents,
+      width: textarea.style.width,
+      height: textarea.style.height
+    }
+    
+    // Make textarea visible but transparent for drop handling
+    Object.assign(textarea.style, {
+      display: 'block',
+      position: 'absolute',
+      opacity: '0.01',
+      pointerEvents: 'auto',
+      width: '100%',
+      height: '100%'
+    })
+    
+    // Create and dispatch cloned drop event
+    const clonedEvent = new DragEvent('drop', {
+      bubbles: true,
+      cancelable: true,
+      dataTransfer: event.dataTransfer,
+      clientX: event.clientX,
+      clientY: event.clientY,
+      view: window
+    })
+    
+    // Forward event to original textarea
+    setTimeout(() => {
+      textarea.dispatchEvent(clonedEvent)
+      
+      // Watch for changes in textarea value (Redmine inserts attachment markdown)
+      const checkInterval = setInterval(() => {
+        if (textarea.value !== originalValue) {
+          logger.info('Redmine inserted attachment markdown')
+          clearInterval(checkInterval)
+          
+          // Trigger input event to sync with editor
+          textarea.dispatchEvent(new Event('input', { bubbles: true }))
+        }
+      }, 100)
+      
+      // Stop checking after 3 seconds
+      setTimeout(() => {
+        clearInterval(checkInterval)
+      }, 3000)
+      
+      // Restore original styles
+      setTimeout(() => {
+        Object.assign(textarea.style, originalStyles)
+      }, RESTORE_STYLE_DELAY)
+    }, POSITION_CALCULATION_DELAY)
+    
+    logger.debug(`Forwarded drop event to position ${dropPosition}`)
   }, [textarea, getTextPositionFromMouseEvent])
 
   return {
     handleDragOver,
-    handleDrop,
+    handleDrop
   }
 }
