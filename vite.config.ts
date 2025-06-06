@@ -14,9 +14,6 @@ const manifest = defineManifest({
       run_at: 'document_end',
     },
   ],
-  background: {
-    service_worker: 'src/background.ts',
-  },
   permissions: ['activeTab', 'scripting'],
   host_permissions: ['<all_urls>'],
 })
