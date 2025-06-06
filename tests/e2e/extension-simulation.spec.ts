@@ -10,17 +10,22 @@ test.describe('Redmine Markdown Editor Extension', () => {
     const extensionPath = path.resolve('./dist')
     console.log('Extension path:', extensionPath)
 
-    context = await chromium.launchPersistentContext('./test-user-data', {
-      headless: false,
-      args: [
-        `--load-extension=${extensionPath}`,
-        `--disable-extensions-except=${extensionPath}`,
-        '--disable-web-security',
-        '--no-sandbox',
-      ],
-    })
+    try {
+      context = await chromium.launchPersistentContext('./test-user-data', {
+        headless: true,
+        args: [
+          `--load-extension=${extensionPath}`,
+          `--disable-extensions-except=${extensionPath}`,
+          '--disable-web-security',
+          '--no-sandbox',
+        ],
+      })
 
-    page = await context.newPage()
+      page = await context.newPage()
+    } catch (error) {
+      console.error('Failed to launch browser context:', error)
+      throw error
+    }
 
     // Enable all console logging for debugging
     page.on('console', (msg: any) => {
@@ -42,7 +47,9 @@ test.describe('Redmine Markdown Editor Extension', () => {
   })
 
   test.afterAll(async () => {
-    await context.close()
+    if (context) {
+      await context.close()
+    }
   })
 
   test('should detect Redmine page elements', async () => {
