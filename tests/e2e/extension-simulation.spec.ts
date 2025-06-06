@@ -10,6 +10,30 @@ test.describe('Redmine Markdown Editor Extension', () => {
     const extensionPath = path.resolve('./dist')
     console.log('Extension path:', extensionPath)
 
+    // In CI, verify extension files exist
+    if (process.env.CI) {
+      const fs = await import('fs')
+      const manifestPath = path.join(extensionPath, 'manifest.json')
+      if (!fs.existsSync(manifestPath)) {
+        throw new Error(`Extension manifest not found at ${manifestPath}`)
+      }
+      
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+      console.log('Manifest content scripts:', manifest.content_scripts)
+      
+      // Check if content script files exist
+      for (const script of manifest.content_scripts || []) {
+        for (const jsFile of script.js || []) {
+          const scriptPath = path.join(extensionPath, jsFile)
+          if (!fs.existsSync(scriptPath)) {
+            console.error(`Content script not found: ${scriptPath}`)
+          } else {
+            console.log(`Content script exists: ${scriptPath}`)
+          }
+        }
+      }
+    }
+
     context = await chromium.launchPersistentContext('./test-user-data', {
       headless: process.env.CI ? true : false,
       args: [
@@ -24,6 +48,8 @@ test.describe('Redmine Markdown Editor Extension', () => {
         '--disable-background-timer-throttling',
         '--disable-backgrounding-occluded-windows',
         '--disable-renderer-backgrounding',
+        '--enable-logging=stderr',
+        '--v=1'
       ],
     })
 
@@ -64,6 +90,9 @@ test.describe('Redmine Markdown Editor Extension', () => {
   })
 
   test('should debug extension loading', async () => {
+    // Wait longer for extension to potentially load
+    await page.waitForTimeout(3000)
+    
     // Check if chrome.runtime is available
     const chromeInfo = await page.evaluate(() => {
       return {
@@ -93,26 +122,56 @@ test.describe('Redmine Markdown Editor Extension', () => {
     // Check for extension activity (even without chrome.runtime access)
     const extensionActivity = await page.evaluate(() => {
       const textarea = document.querySelector('#issue_notes') as HTMLTextAreaElement
+      const scripts = Array.from(document.scripts).map(s => s.src || s.textContent?.substring(0, 100))
       return {
         hasMarkdownOverlay: textarea?.hasAttribute('data-markdown-overlay'),
         markdownEditorExists: !!document.querySelector('.md-editor'),
         textareaHidden: textarea ? getComputedStyle(textarea).opacity === '0' : false,
+        loadedScripts: scripts.filter(s => s && s.includes('content-script')),
+        totalScripts: scripts.length,
+        extensionLoaded: !!(window as any).__REDMINE_MARKDOWN_EXTENSION_LOADED__,
+        extensionInitialized: !!(window as any).__REDMINE_MARKDOWN_EXTENSION_INITIALIZED__,
+        consoleLogs: []
       }
     })
 
     console.log('Extension activity:', extensionActivity)
 
-    // Extension is working if it has modified the textarea
-    if (extensionActivity.hasMarkdownOverlay || extensionActivity.markdownEditorExists) {
+    // Extension is working if it has modified the textarea OR in CI if chrome extension context is different
+    const isExtensionWorking = extensionActivity.hasMarkdownOverlay || extensionActivity.markdownEditorExists
+    
+    if (isExtensionWorking) {
       console.log('✅ Extension is working - detected activity on the page')
-      expect(extensionActivity.hasMarkdownOverlay || extensionActivity.markdownEditorExists).toBe(
-        true
-      )
+      expect(isExtensionWorking).toBe(true)
     } else {
       console.log('❌ Extension not working - no activity detected')
-      expect(extensionActivity.hasMarkdownOverlay || extensionActivity.markdownEditorExists).toBe(
-        true
-      )
+      
+      // In CI, check if this is just a chrome.runtime access issue but extension might still load
+      if (process.env.CI && chromeInfo.hasChrome === false) {
+        console.log('⚠️ CI environment detected with no Chrome API access - this may be normal in headless mode')
+        console.log('Will wait longer and check again...')
+        
+        await page.waitForTimeout(5000)
+        
+        const retryActivity = await page.evaluate(() => {
+          const textarea = document.querySelector('#issue_notes') as HTMLTextAreaElement
+          return {
+            hasMarkdownOverlay: textarea?.hasAttribute('data-markdown-overlay'),
+            markdownEditorExists: !!document.querySelector('.md-editor'),
+          }
+        })
+        
+        console.log('Retry extension activity:', retryActivity)
+        
+        if (retryActivity.hasMarkdownOverlay || retryActivity.markdownEditorExists) {
+          console.log('✅ Extension working after extended wait')
+          expect(true).toBe(true) // Pass the test
+        } else {
+          expect(isExtensionWorking).toBe(true) // Fail normally
+        }
+      } else {
+        expect(isExtensionWorking).toBe(true)
+      }
     }
   })
 

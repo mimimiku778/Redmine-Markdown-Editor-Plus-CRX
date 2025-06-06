@@ -2,10 +2,15 @@ import { initialize, destroy } from './content/RedmineMarkdownExtension'
 import { logger } from './utils/logger'
 import './index.css'
 
+// Add a global marker to indicate the extension is loaded
+;(window as any).__REDMINE_MARKDOWN_EXTENSION_LOADED__ = true
+
 // Initialize the extension when ready
 const initExtension = async () => {
   try {
+    logger.info('Initializing Redmine Markdown Extension')
     await initialize()
+    ;(window as any).__REDMINE_MARKDOWN_EXTENSION_INITIALIZED__ = true
   } catch (error) {
     logger.error('Failed to initialize extension', error)
   }
