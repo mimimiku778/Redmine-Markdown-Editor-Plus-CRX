@@ -1,0 +1,39 @@
+name: redmine-markdown-editor-crx-test
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: redmine-markdown-editor-crx-test-db
+    environment:
+      MYSQL_ROOT_PASSWORD: redmine_root
+      MYSQL_DATABASE: redmine
+      MYSQL_USER: redmine
+      MYSQL_PASSWORD: redmine
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-predmine_root"]
+      timeout: 20s
+      retries: 10
+
+  redmine:
+    image: redmine:latest
+    container_name: redmine-markdown-editor-crx-test-redmine
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      REDMINE_DB_MYSQL: db
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD: redmine
+      REDMINE_DB_DATABASE: redmine
+    ports:
+      - "3001:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      timeout: 30s
+      retries: 15
+      start_period: 60s
+
+volumes:
+  db_data:

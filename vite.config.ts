@@ -39,4 +39,7 @@ export default defineConfig({
     // The linked issue gives a potential fix that @crxjs/vite-plugin could implement
     skipWebSocketTokenCheck: true,
   },
+  build: {
+    chunkSizeWarningLimit: 5000, // Increase chunk size limit to avoid warnings
+  },
 })

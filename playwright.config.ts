@@ -10,7 +10,7 @@ export default defineConfig({
   use: {
     trace: 'on-first-retry',
   },
-  webServer: {
+  webServer: process.env.CI ? undefined : {
     command: 'npx http-server tests/e2e/mocks -p 8080 --cors',
     port: 8080,
     reuseExistingServer: !process.env.CI,
