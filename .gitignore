@@ -30,3 +30,7 @@ dist-ssr
 /playwright/.cache/
 /tests/e2e/screenshots/
 /tests/e2e/videos/
+/tests/storage/
+
+# Test configuration overrides (local environment settings)
+/tests/.env
