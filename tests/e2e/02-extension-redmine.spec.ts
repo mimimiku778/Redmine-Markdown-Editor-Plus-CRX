@@ -13,7 +13,7 @@ test.describe('Redmine Markdown Editor Extension', () => {
     const uniqueUserData = `/tmp/playwright-extension-${Date.now()}`
 
     context = await chromium.launchPersistentContext(uniqueUserData, {
-      headless: !!process.env.CI,
+      headless: false,
       args: [
         `--load-extension=${extensionPath}`,
         `--disable-extensions-except=${extensionPath}`,
