@@ -10,6 +10,10 @@ import { usePaste } from '../hooks/usePaste'
 import { CONFIG } from '../../config'
 import { customKeymap } from '../extensions'
 import { logger } from '../../utils/logger'
+import { basicSetup } from 'codemirror'
+import { markdown } from '@codemirror/lang-markdown'
+import { keymap } from '@codemirror/view'
+import { indentWithTab } from '@codemirror/commands'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
@@ -74,6 +78,14 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
 
   const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse, remarkHideRelativeImages], [])
 
+  // Recreate default extensions with custom keymap added
+  const extensions = useMemo(() => [
+    basicSetup,
+    keymap.of([indentWithTab]),
+    markdown(),
+    customKeymap,
+  ], [])
+
   // Alternative approach to get EditorView without plugin
   // const viewCapturePlugin = useMemo(
   //   () =>
@@ -134,7 +146,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
           remarkPlugins,
         }}
         style={editorStyles}
-        reExtensions={[customKeymap]}
+        reExtensions={extensions}
       />
     </div>
   )
