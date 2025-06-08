@@ -22,29 +22,11 @@ export function checkTabState(textarea: HTMLTextAreaElement): {
   isPreviewMode: boolean
   tabsContainer: Element | null
 } {
-  const possibleContainers = [
-    textarea.closest('.jstBlock')?.querySelector(REDMINE_SELECTORS.jstTabs),
-    textarea.closest('form')?.querySelector(REDMINE_SELECTORS.jstTabs),
-    textarea.closest('.box')?.querySelector(REDMINE_SELECTORS.jstTabs),
-    document.querySelector('.jstTabs'),
-  ].filter(Boolean) as Element[]
-
-  for (const tabsContainer of possibleContainers) {
-    // Check for any active preview indicator in one simple check
-    const isPreviewActive = !!(
-      tabsContainer.querySelector(REDMINE_SELECTORS.previewTab + '.selected') ||
-      tabsContainer.querySelector('li.selected a[onclick*="preview"]') ||
-      tabsContainer.querySelector('.selected') ||
-      tabsContainer.querySelector('.current') ||
-      tabsContainer.querySelector('.active')
-    )
-
-    if (isPreviewActive) {
-      return { isPreviewMode: true, tabsContainer }
-    }
-  }
-
-  return { isPreviewMode: false, tabsContainer: null }
+  const tabsContainer = textarea.closest(REDMINE_SELECTORS.jstBlock)
+  console.log('Tabs container:', tabsContainer)
+  return tabsContainer && tabsContainer.querySelector('.tab-preview.selected')
+    ? { isPreviewMode: true, tabsContainer }
+    : { isPreviewMode: false, tabsContainer: null }
 }
 
 export function isTabClick(target: HTMLElement): boolean {

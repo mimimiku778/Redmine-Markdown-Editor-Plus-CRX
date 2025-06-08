@@ -14,7 +14,7 @@ export function isRedminePage(): boolean {
 
 /** Find all relevant Redmine textareas on the page */
 export function findTextareas(): HTMLTextAreaElement[] {
-  const selectors = [REDMINE_SELECTORS.wikiEdit, REDMINE_SELECTORS.jstBlock]
+  const selectors = [REDMINE_SELECTORS.wikiEdit, REDMINE_SELECTORS.jstBlockTextarea]
   const textareas = findTextareasFromDom(selectors)
   logger.info(`Found ${textareas.length} Redmine textareas`)
   return textareas

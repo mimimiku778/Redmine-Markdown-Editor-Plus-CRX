@@ -12,10 +12,10 @@ export const CONFIG: ExtensionConfig = {
 
 export const REDMINE_SELECTORS: RedmineSelectors = {
   wikiEdit: 'textarea.wiki-edit',
-  jstBlock: '.jstBlock textarea',
+  jstBlockTextarea: '.jstBlock textarea',
   jstTabs: '.jstTabs, .tabs',
-  previewTab: 'a[onclick*="preview"], a[href*="preview"], .tab-preview',
-  editTab: 'a[onclick*="edit"], a[href*="edit"], .tab-edit',
+  jstBlock: '.jstBlock',
+
 }
 
 export const MARKDOWN_OVERLAY_ATTRIBUTE = 'data-markdown-overlay' as const
