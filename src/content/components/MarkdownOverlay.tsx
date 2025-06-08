@@ -55,7 +55,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
         logger.warn('EditorView not available for drag and drop')
       }
     },
-    [handleDrop, updateValue]
+    [handleDrop, updateValue, editorViewRef]
   )
 
   // Handle paste event with editorView access
@@ -67,7 +67,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
         logger.warn('EditorView not available for paste')
       }
     },
-    [handlePaste, updateValue]
+    [handlePaste, updateValue, editorViewRef]
   )
 
   return (

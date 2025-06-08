@@ -9,12 +9,6 @@ export interface ExtensionConfig {
   }
 }
 
-export interface ProcessedTextarea {
-  textarea: HTMLTextAreaElement
-  wrapper: HTMLDivElement
-  root: import('react-dom/client').Root
-}
-
 export interface RedmineSelectors {
   wikiEdit: string
   jstBlockTextarea: string

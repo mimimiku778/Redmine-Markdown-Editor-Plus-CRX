@@ -1,4 +1,3 @@
-import { findTextareas as findTextareasFromDom } from './domUtils'
 import { REDMINE_SELECTORS } from '../../config'
 import { logger } from '../../utils/logger'
 
@@ -15,9 +14,21 @@ export function isRedminePage(): boolean {
 /** Find all relevant Redmine textareas on the page */
 export function findTextareas(): HTMLTextAreaElement[] {
   const selectors = [REDMINE_SELECTORS.wikiEdit, REDMINE_SELECTORS.jstBlockTextarea]
-  const textareas = findTextareasFromDom(selectors)
-  logger.info(`Found ${textareas.length} Redmine textareas`)
-  return textareas
+
+  try {
+    const textareas = new Set<HTMLTextAreaElement>()
+
+    for (const selector of selectors) {
+      const elements = document.querySelectorAll<HTMLTextAreaElement>(selector)
+      elements.forEach((el) => textareas.add(el))
+    }
+
+    logger.debug(`Found ${textareas.size} Redmine textareas`)
+    return Array.from(textareas)
+  } catch (error) {
+    logger.error('Failed to find textareas', error)
+    return []
+  }
 }
 
 /** Check if a textarea is within Redmine editing context */

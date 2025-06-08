@@ -1,11 +1,10 @@
-import { isRedminePage, findTextareas, processTextarea, cleanupAll } from './services'
+import { isRedminePage, findTextareas, processTextarea } from './services'
 import { logger } from '../utils/logger'
 import { handleError } from '../utils/errors'
 import { InitializationError } from '../types'
 
 // Module-scoped state
 let initialized = false
-let noteObservers: MutationObserver[] = []
 
 /** Initialize the Redmine Markdown Extension */
 export async function initialize(): Promise<void> {
@@ -42,26 +41,6 @@ export async function initialize(): Promise<void> {
   }
 }
 
-/** Destroy the extension and cleanup overlays */
-export function destroy(): void {
-  if (!initialized) {
-    logger.debug('Extension not initialized, nothing to destroy')
-    return
-  }
-
-  logger.info('Destroying Redmine Markdown Extension')
-
-  try {
-    stopNoteObservers()
-    cleanupAll()
-    initialized = false
-
-    logger.info('Extension destroyed successfully')
-  } catch (error) {
-    handleError(error, 'destroy')
-  }
-}
-
 function startNoteObservers(): void {
   const noteElements = document.querySelectorAll('.note')
 
@@ -80,17 +59,8 @@ function startNoteObservers(): void {
       subtree: true,
     })
 
-    noteObservers.push(observer)
     logger.debug('Started observing .note element for textarea insertion')
   })
-}
-
-function stopNoteObservers(): void {
-  noteObservers.forEach((observer) => {
-    observer.disconnect()
-    logger.debug('Disconnected .note observer')
-  })
-  noteObservers = []
 }
 
 function handleNoteChanges(mutations: MutationRecord[]): void {
