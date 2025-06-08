@@ -49,7 +49,7 @@ test.describe('Redmine Setup Prerequisites Verification', () => {
 
     console.log('📊 Extension selectors check:', selectors)
 
-    for (const [key, count] of Object.entries(selectors)) {
+    for (const [, count] of Object.entries(selectors)) {
       expect(count).toBeGreaterThan(0)
     }
     console.log('✅ Extension selectors verified')
