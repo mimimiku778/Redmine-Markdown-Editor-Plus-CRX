@@ -32,6 +32,32 @@ export function useDragAndDrop(): DragAndDropHandlers {
       const files = Array.from(event.dataTransfer.files)
       logger.info(`Drop detected: ${files.length} files`)
 
+      // Check if we're in an #issue-form context first
+      const issueForm = document.querySelector('#issue-form')
+      if (!issueForm) {
+        logger.debug('No #issue-form found, proceeding with direct processing')
+      } else {
+        // Try to find target element with .box.filedroplistner selector for event propagation
+        const targetElement = issueForm.querySelector('.box.filedroplistner')
+        
+        if (targetElement && targetElement !== event.target) {
+          // Stop the original event to prevent duplication
+          event.stopPropagation()
+          event.preventDefault()
+          
+          // Create a new drag event and dispatch it to the target element
+          const syntheticEvent = new DragEvent('drop', {
+            bubbles: true,
+            cancelable: true,
+            dataTransfer: event.dataTransfer as DataTransfer
+          })
+          
+          targetElement.dispatchEvent(syntheticEvent)
+          logger.debug(`Event killed and propagated to .box.filedroplistner element in #issue-form`)
+          return
+        }
+      }
+
       // Get current editor state and cursor position
       const state = editorView.state
       const from = state.selection.main.from
