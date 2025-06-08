@@ -21,7 +21,7 @@ export function usePaste(): PasteHandlers {
       }
 
       const files = Array.from(clipboardData.files)
-      const imageFiles = files.filter(file => {
+      const imageFiles = files.filter((file) => {
         const fileName = file.name
         const fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase()
         return IMAGE_EXTENSIONS.includes(fileExtension)
@@ -38,11 +38,11 @@ export function usePaste(): PasteHandlers {
       const syntheticDragEvent = new DragEvent('drop', {
         bubbles: true,
         cancelable: true,
-        dataTransfer: new DataTransfer()
+        dataTransfer: new DataTransfer(),
       })
 
       // Add files to the synthetic event's dataTransfer
-      imageFiles.forEach(file => {
+      imageFiles.forEach((file) => {
         syntheticDragEvent.dataTransfer?.items.add(file)
       })
 

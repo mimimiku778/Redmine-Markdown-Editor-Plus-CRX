@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { DOMUtils } from '../services'
+import { checkTabState, isTabClick } from '../services'
 import { logger } from '../../utils/logger'
 
 const TAB_CHECK_DELAY = 100
@@ -9,9 +9,10 @@ export function useTabState(textarea: HTMLTextAreaElement): boolean {
 
   const checkPreviewMode = useCallback(() => {
     try {
-      const tabState = DOMUtils.checkTabState(textarea)
+      const tabState = checkTabState(textarea)
       setIsPreviewMode(tabState.isPreviewMode)
-      tabState.isPreviewMode && logger.debug(`Tab state updated - Preview: ${tabState.isPreviewMode}`)
+      tabState.isPreviewMode &&
+        logger.debug(`Tab state updated - Preview: ${tabState.isPreviewMode}`)
       return tabState
     } catch (error) {
       logger.error('Failed to check tab state', error)
@@ -26,7 +27,7 @@ export function useTabState(textarea: HTMLTextAreaElement): boolean {
     // Watch for tab clicks
     const handleTabClick = (event: Event) => {
       const target = event.target as HTMLElement
-      if (DOMUtils.isTabClick(target)) {
+      if (isTabClick(target)) {
         // Delay to ensure DOM has updated
         setTimeout(checkPreviewMode, TAB_CHECK_DELAY)
       }

@@ -1,24 +1,14 @@
-import {
-  isRedminePage,
-  findTextareas,
-  hideToolbars,
-  processTextarea,
-  cleanupAll,
-  observeDOM,
-} from './services'
+import { isRedminePage, findTextareas, processTextarea, cleanupAll } from './services'
 import { logger } from '../utils/logger'
 import { handleError } from '../utils/errors'
 import { InitializationError } from '../types'
 
 // Module-scoped state
 let initialized = false
-let stopObserver: (() => void) | null = null
-
-// Configuration
-const INITIALIZATION_DELAY = 100
+let noteObservers: MutationObserver[] = []
 
 /** Initialize the Redmine Markdown Extension */
-export const initialize = async (): Promise<void> => {
+export async function initialize(): Promise<void> {
   if (initialized) {
     logger.debug('Extension already initialized')
     return
@@ -40,14 +30,8 @@ export const initialize = async (): Promise<void> => {
       textareas.forEach(processTextarea)
     }
 
-    // Hide toolbars
-    hideToolbars()
-
-    // Observe future textareas
-    stopObserver = observeDOM((nodes) => {
-      // Delay processing to ensure DOM is stable
-      setTimeout(() => handleNewNodes(nodes), INITIALIZATION_DELAY)
-    })
+    // Start observing .note elements for dynamic textarea insertion
+    startNoteObservers()
 
     initialized = true
     logger.info('Redmine Markdown Extension initialized successfully')
@@ -59,7 +43,7 @@ export const initialize = async (): Promise<void> => {
 }
 
 /** Destroy the extension and cleanup overlays */
-export const destroy = (): void => {
+export function destroy(): void {
   if (!initialized) {
     logger.debug('Extension not initialized, nothing to destroy')
     return
@@ -68,11 +52,7 @@ export const destroy = (): void => {
   logger.info('Destroying Redmine Markdown Extension')
 
   try {
-    if (stopObserver) {
-      stopObserver()
-      stopObserver = null
-    }
-
+    stopNoteObservers()
     cleanupAll()
     initialized = false
 
@@ -82,43 +62,74 @@ export const destroy = (): void => {
   }
 }
 
-// Handle new DOM nodes by processing new textareas
-const handleNewNodes = (addedNodes: Node[]): void => {
-  try {
-    const newTextareas = findNewTextareas(addedNodes)
+function startNoteObservers(): void {
+  const noteElements = document.querySelectorAll('.note')
 
-    if (newTextareas.length > 0) {
-      logger.info(`Processing ${newTextareas.length} new textareas`)
-      newTextareas.forEach(processTextarea)
-      hideToolbars()
-    }
-  } catch (error) {
-    handleError(error, 'handleNewNodes')
+  if (noteElements.length === 0) {
+    logger.debug('No .note elements found to observe')
+    return
   }
+
+  noteElements.forEach((noteElement) => {
+    const observer = new MutationObserver((mutations) => {
+      handleNoteChanges(mutations)
+    })
+
+    observer.observe(noteElement, {
+      childList: true,
+      subtree: true,
+    })
+
+    noteObservers.push(observer)
+    logger.debug('Started observing .note element for textarea insertion')
+  })
 }
 
-// Find textareas in newly added nodes
-const findNewTextareas = (addedNodes: Node[]): HTMLTextAreaElement[] => {
-  const textareas = new Set<HTMLTextAreaElement>()
+function stopNoteObservers(): void {
+  noteObservers.forEach((observer) => {
+    observer.disconnect()
+    logger.debug('Disconnected .note observer')
+  })
+  noteObservers = []
+}
 
-  for (const node of addedNodes) {
-    if (node.nodeType !== Node.ELEMENT_NODE) continue
+function handleNoteChanges(mutations: MutationRecord[]): void {
+  try {
+    const addedNodes: Node[] = []
 
-    const element = node as Element
-
-    // Check if the node itself is a textarea
-    if (element.matches('textarea.wiki-edit')) {
-      textareas.add(element as HTMLTextAreaElement)
+    for (const mutation of mutations) {
+      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+        addedNodes.push(...Array.from(mutation.addedNodes))
+      }
     }
 
-    // Find textareas within the node
-    const selectors = ['textarea.wiki-edit', '.jstBlock textarea']
+    if (addedNodes.length === 0) return
 
-    for (const selector of selectors) {
-      const found = element.querySelectorAll<HTMLTextAreaElement>(selector)
-      found.forEach((textarea) => textareas.add(textarea))
+    // Find new textareas in added nodes
+    const newTextareas = new Set<HTMLTextAreaElement>()
+
+    for (const node of addedNodes) {
+      if (node.nodeType !== Node.ELEMENT_NODE) continue
+
+      const element = node as Element
+
+      // Check if the node itself is a textarea
+      if (element.matches('textarea.wiki-edit')) {
+        newTextareas.add(element as HTMLTextAreaElement)
+      }
+
+      // Find textareas within the node
+      const found = element.querySelectorAll<HTMLTextAreaElement>(
+        'textarea.wiki-edit, .jstBlock textarea'
+      )
+      found.forEach((textarea) => newTextareas.add(textarea))
     }
+
+    if (newTextareas.size > 0) {
+      logger.info(`Processing ${newTextareas.size} new textareas in .note`)
+      Array.from(newTextareas).forEach(processTextarea)
+    }
+  } catch (error) {
+    handleError(error, 'handleNoteChanges')
   }
-
-  return Array.from(textareas)
 }

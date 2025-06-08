@@ -15,21 +15,10 @@ export interface ProcessedTextarea {
   root: import('react-dom/client').Root
 }
 
-export interface DOMObserverOptions {
-  selector?: string
-  childList?: boolean
-  subtree?: boolean
-  attributes?: boolean
-  attributeFilter?: string[]
-}
-
-export type DOMObserverCallback = (addedNodes: Node[]) => void
-
 export interface RedmineSelectors {
   wikiEdit: string
   jstBlock: string
   jstTabs: string
-  tabElements: string
   previewTab: string
   editTab: string
 }

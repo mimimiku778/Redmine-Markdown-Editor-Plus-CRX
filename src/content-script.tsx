@@ -3,7 +3,7 @@ import { logger } from './utils/logger'
 import './index.css'
 
 // Initialize the extension when ready
-const initExtension = async () => {
+async function initExtension(): Promise<void> {
   try {
     await initialize()
   } catch (error) {
@@ -32,7 +32,7 @@ let currentUrl = window.location.href
 const NAVIGATION_CHECK_INTERVAL = 1000
 const REINIT_DELAY = 500
 
-const checkForNavigation = async () => {
+async function checkForNavigation(): Promise<void> {
   if (window.location.href !== currentUrl) {
     const oldUrl = currentUrl
     currentUrl = window.location.href

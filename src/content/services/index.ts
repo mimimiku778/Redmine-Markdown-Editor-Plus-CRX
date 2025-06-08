@@ -1,4 +1,3 @@
-export { observeDOM, DOMObserverService } from './DOMObserver'
-export { isRedminePage, findTextareas, hideToolbars, isTextareaInContext } from './RedmineService'
+export { isRedminePage, findTextareas, isTextareaInContext } from './RedmineService'
 export { canProcess, processTextarea, cleanupTextarea, cleanupAll } from './TextareaProcessor'
-export { DOMUtils } from './domUtils'
+export { findTextareas as findTextareasFromDom, checkTabState, isTabClick } from './domUtils'

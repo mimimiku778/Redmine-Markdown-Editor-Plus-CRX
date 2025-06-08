@@ -15,11 +15,12 @@ const isAlreadyProcessed = (textarea: HTMLTextAreaElement): boolean =>
   textarea.getAttribute(MARKDOWN_OVERLAY_ATTRIBUTE) === PROCESSED_ATTRIBUTE_VALUE
 
 /** Determine if this textarea should get a markdown overlay */
-export const canProcess = (textarea: HTMLTextAreaElement): boolean =>
-  !isAlreadyProcessed(textarea) && isTextareaInContext(textarea)
+export function canProcess(textarea: HTMLTextAreaElement): boolean {
+  return !isAlreadyProcessed(textarea) && isTextareaInContext(textarea)
+}
 
 /** Process a textarea by hiding it and rendering a MarkdownOverlay */
-export const processTextarea = (textarea: HTMLTextAreaElement): void => {
+export function processTextarea(textarea: HTMLTextAreaElement): void {
   try {
     if (!canProcess(textarea)) {
       logger.debug('Textarea cannot be processed, skipping')
@@ -52,7 +53,7 @@ export const processTextarea = (textarea: HTMLTextAreaElement): void => {
 }
 
 /** Cleanup an overlay for a given textarea */
-export const cleanupTextarea = (textarea: HTMLTextAreaElement): void => {
+export function cleanupTextarea(textarea: HTMLTextAreaElement): void {
   try {
     const entry = processedMap.get(textarea)
     if (!entry) {
@@ -73,7 +74,7 @@ export const cleanupTextarea = (textarea: HTMLTextAreaElement): void => {
 }
 
 /** Cleanup all overlays */
-export const cleanupAll = (): void => {
+export function cleanupAll(): void {
   logger.info(`Cleaning up ${processedMap.size} overlays`)
   processedMap.forEach((_, textarea) => cleanupTextarea(textarea))
   processedMap.clear()

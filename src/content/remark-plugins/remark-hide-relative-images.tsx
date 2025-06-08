@@ -16,7 +16,6 @@ const remarkHideRelativeImages: Plugin = () => {
         !node.url.startsWith('http') && !node.url.startsWith('/') && !node.url.startsWith('data:')
 
       if (isRelativePath) {
-
         // Replace image node with a visual placeholder
         if (parent && typeof index === 'number' && 'children' in parent) {
           const placeholder: HTML = {

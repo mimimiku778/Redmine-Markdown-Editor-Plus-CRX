@@ -1,2 +1,2 @@
 export { logger } from './logger'
-export { handleError, assertElement, assertNotNull } from './errors'
+export { handleError } from './errors'

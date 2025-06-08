@@ -79,12 +79,10 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse, remarkHideRelativeImages], [])
 
   // Recreate default extensions with custom keymap added
-  const extensions = useMemo(() => [
-    basicSetup,
-    keymap.of([indentWithTab]),
-    markdown(),
-    customKeymap,
-  ], [])
+  const extensions = useMemo(
+    () => [basicSetup, keymap.of([indentWithTab]), markdown(), customKeymap],
+    []
+  )
 
   // Alternative approach to get EditorView without plugin
   // const viewCapturePlugin = useMemo(
@@ -102,7 +100,6 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   //     ),
   //   []
   // )
-
 
   // Handle drop event with editorView access
   const handleDropWithEditor = useCallback(
