@@ -2,7 +2,6 @@ import { memo, useMemo, useRef, useCallback } from 'react'
 import MarkdownEditor from '@uiw/react-markdown-editor'
 import type { Commands } from '@uiw/react-markdown-editor/esm/components/ToolBar'
 import type { EditorView } from '@codemirror/view'
-import { ViewPlugin } from '@codemirror/view'
 import remarkBreaks from 'remark-breaks'
 import { remarkCollapse, remarkHideRelativeImages } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
@@ -92,7 +91,6 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   //   []
   // )
 
-  const extensions = useMemo(() => [customKeymap], [])
 
   // Handle drop event with editorView access
   const handleDropWithEditor = useCallback(
@@ -136,6 +134,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
           remarkPlugins,
         }}
         style={editorStyles}
+        reExtensions={[customKeymap]}
       />
     </div>
   )
