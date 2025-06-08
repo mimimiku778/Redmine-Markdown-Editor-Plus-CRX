@@ -4,7 +4,7 @@ import type { Commands } from '@uiw/react-markdown-editor/esm/components/ToolBar
 import type { EditorView } from '@codemirror/view'
 import { ViewPlugin } from '@codemirror/view'
 import remarkBreaks from 'remark-breaks'
-import { remarkCollapse } from '../remark-plugins'
+import { remarkCollapse, remarkHideRelativeImages } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
 import { useTabState, useTextareaSync, useDragAndDrop } from '../hooks'
 import { usePaste } from '../hooks/usePaste'
@@ -73,7 +73,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     []
   )
 
-  const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse], [])
+  const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse, remarkHideRelativeImages], [])
 
   // Create a view plugin to capture the editor view
   const viewCapturePlugin = useMemo(
