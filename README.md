@@ -43,6 +43,7 @@ E2E testing workflow (runs on `npm run test` and GitHub Actions):
 ## Future Features
 
 - **Image Display in Markdown Editor**: Proper display of uploaded images in the markdown preview by resolving relative paths to Redmine attachment URLs (`/attachments/download/{ID}/filename`)
+  - Implementation approach: Extract attachment IDs from Redmine's preview API response HTML and map them to filenames for remark plugin processing
 
 ## Related
 
