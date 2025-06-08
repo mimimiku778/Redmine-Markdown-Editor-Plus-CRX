@@ -40,6 +40,10 @@ E2E testing workflow (runs on `npm run test` and GitHub Actions):
 - Load extension into Playwright Chrome browser
 - Verify extension functionality on live Redmine pages
 
+## Future Features
+
+- **Image Display in Markdown Editor**: Proper display of uploaded images in the markdown preview by resolving relative paths to Redmine attachment URLs (`/attachments/download/{ID}/filename`)
+
 ## Related
 
 - [React Markdown Editor](https://github.com/uiwjs/react-markdown-editor)
