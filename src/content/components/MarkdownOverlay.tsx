@@ -136,7 +136,6 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
           remarkPlugins,
         }}
         style={editorStyles}
-        reExtensions={extensions}
       />
     </div>
   )
