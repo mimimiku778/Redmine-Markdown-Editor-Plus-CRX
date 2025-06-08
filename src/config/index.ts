@@ -14,6 +14,7 @@ export const REDMINE_SELECTORS: RedmineSelectors = {
   wikiEdit: 'textarea.wiki-edit',
   jstBlockTextarea: '.jstBlock textarea',
   jstBlock: '.jstBlock',
+  tabElements: '.tab-elements',
 }
 
 export const MARKDOWN_OVERLAY_ATTRIBUTE = 'data-markdown-overlay' as const

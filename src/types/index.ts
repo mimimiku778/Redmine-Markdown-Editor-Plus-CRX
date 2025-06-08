@@ -19,6 +19,7 @@ export interface RedmineSelectors {
   wikiEdit: string
   jstBlockTextarea: string
   jstBlock: string
+  tabElements: string
 }
 
 export interface MarkdownCommand {

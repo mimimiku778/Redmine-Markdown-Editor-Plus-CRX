@@ -1,35 +1,21 @@
-import { memo, useMemo, useRef, useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import MarkdownEditor from '@uiw/react-markdown-editor'
 import type { Commands } from '@uiw/react-markdown-editor/esm/components/ToolBar'
-import type { EditorView } from '@codemirror/view'
-import remarkBreaks from 'remark-breaks'
-import { remarkCollapse, remarkHideRelativeImages } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
-import { useTabState, useTextareaSync, useDragAndDrop } from '../hooks'
+import {
+  useTabState,
+  useTextareaSync,
+  useDragAndDrop,
+  useHideTabElements,
+  usePlugins,
+  useExtensions,
+  useStyles,
+} from '../hooks'
 import { usePaste } from '../hooks/usePaste'
-import { CONFIG } from '../../config'
-import { customKeymap } from '../extensions'
 import { logger } from '../../utils/logger'
-import { basicSetup } from 'codemirror'
-import { markdown } from '@codemirror/lang-markdown'
-import { keymap } from '@codemirror/view'
-import { indentWithTab } from '@codemirror/commands'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
-}
-
-interface EditorStyles {
-  fontSize: string
-  height: string
-  minHeight: string
-}
-
-interface WrapperStyles {
-  width: string
-  height: string
-  minHeight: string
-  display: string
 }
 
 const DEFAULT_COMMANDS: Commands[] = [
@@ -55,51 +41,10 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const { value, updateValue } = useTextareaSync(textarea)
   const { handleDragOver, handleDrop } = useDragAndDrop()
   const { handlePaste } = usePaste()
-  const editorViewRef = useRef<EditorView | null>(null)
-
-  const wrapperStyles = useMemo<WrapperStyles>(
-    () => ({
-      width: '100%',
-      height: '100%',
-      minHeight: `${CONFIG.overlay.minHeight}px`,
-      display: isPreviewMode ? 'none' : 'block',
-    }),
-    [isPreviewMode]
-  )
-
-  const editorStyles = useMemo<EditorStyles>(
-    () => ({
-      fontSize: '16px',
-      height: '100%',
-      minHeight: `${CONFIG.overlay.minHeight}px`,
-    }),
-    []
-  )
-
-  const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse, remarkHideRelativeImages], [])
-
-  // Recreate default extensions with custom keymap added
-  const extensions = useMemo(
-    () => [basicSetup, keymap.of([indentWithTab]), markdown(), customKeymap],
-    []
-  )
-
-  // Alternative approach to get EditorView without plugin
-  // const viewCapturePlugin = useMemo(
-  //   () =>
-  //     ViewPlugin.fromClass(
-  //       class {
-  //         constructor(view: EditorView) {
-  //           editorViewRef.current = view
-  //           logger.debug('EditorView captured via ViewPlugin')
-  //         }
-  //         destroy() {
-  //           editorViewRef.current = null
-  //         }
-  //       }
-  //     ),
-  //   []
-  // )
+  const { remarkPlugins } = usePlugins()
+  const { extensions, editorViewRef } = useExtensions()
+  const { wrapperStyles, editorStyles } = useStyles(isPreviewMode)
+  useHideTabElements(textarea)
 
   // Handle drop event with editorView access
   const handleDropWithEditor = useCallback(
@@ -124,8 +69,6 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     },
     [handlePaste, updateValue]
   )
-
-  isPreviewMode && logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
 
   return (
     <div

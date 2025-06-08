@@ -1,0 +1,28 @@
+import { useMemo } from 'react'
+import { CONFIG } from '../../config'
+import { logger } from '../../utils'
+
+export const useStyles = (isPreviewMode: boolean) => {
+  const wrapperStyles = useMemo(
+    () => ({
+      width: '100%',
+      height: '100%',
+      minHeight: `${CONFIG.overlay.minHeight}px`,
+      display: isPreviewMode ? 'none' : 'block',
+    }),
+    [isPreviewMode]
+  )
+
+  const editorStyles = useMemo(
+    () => ({
+      fontSize: '16px',
+      height: '100%',
+      minHeight: `${CONFIG.overlay.minHeight}px`,
+    }),
+    []
+  )
+
+  isPreviewMode && logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
+
+  return { wrapperStyles, editorStyles }
+}
