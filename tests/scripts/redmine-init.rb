@@ -31,7 +31,6 @@ if anonymous_role
   puts "  Anonymous permissions: #{anonymous_role.permissions.size} permissions granted"
 end
 
-
 # Create/update admin user
 admin_password = ENV["REDMINE_ADMIN_PASSWORD"] || "admin123"
 admin = User.find_by(login: "admin")
@@ -44,18 +43,6 @@ puts ""
 puts "👤 Admin Account:"
 puts "  Username: #{admin.login}"
 puts "  Password: #{admin_password}"
-
-# Configure system settings
-Setting.issues_export_limit = 0
-Setting.cross_project_issue_relations = true
-Setting.default_projects_public = true
-Setting.attachment_max_size = 0
-Setting.file_max_size_displayed = 0
-Setting.default_projects_tracker_ids = Tracker.all.pluck(:id)
-Setting.mail_from = "noreply@example.com"
-Setting.plain_text_mail = true
-Setting.notified_events = []
-Rails.logger.level = Logger::ERROR
 
 # Create basic data if needed
 IssueStatus.create!(name: "New", is_closed: false) if IssueStatus.count == 0

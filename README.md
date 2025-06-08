@@ -28,7 +28,7 @@ npm run type-check # Type checking
 npm run lint       # Lint code
 npm run format     # Format code
 npm run test         # Run tests
-npm run redmine      # Start Redmine Docker container for testing
+npm run redmine      # Start Redmine Docker container for development
 npm run redmine:down # Stop and remove Redmine Docker container
 ```
 

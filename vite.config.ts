@@ -14,7 +14,6 @@ const manifest = defineManifest({
       run_at: 'document_end',
     },
   ],
-  permissions: ['activeTab', 'scripting'],
   host_permissions: ['<all_urls>'],
 })
 
