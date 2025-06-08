@@ -75,24 +75,24 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
 
   const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse, remarkHideRelativeImages], [])
 
-  // Create a view plugin to capture the editor view
-  const viewCapturePlugin = useMemo(
-    () =>
-      ViewPlugin.fromClass(
-        class {
-          constructor(view: EditorView) {
-            editorViewRef.current = view
-            logger.debug('EditorView captured via ViewPlugin')
-          }
-          destroy() {
-            editorViewRef.current = null
-          }
-        }
-      ),
-    []
-  )
+  // Alternative approach to get EditorView without plugin
+  // const viewCapturePlugin = useMemo(
+  //   () =>
+  //     ViewPlugin.fromClass(
+  //       class {
+  //         constructor(view: EditorView) {
+  //           editorViewRef.current = view
+  //           logger.debug('EditorView captured via ViewPlugin')
+  //         }
+  //         destroy() {
+  //           editorViewRef.current = null
+  //         }
+  //       }
+  //     ),
+  //   []
+  // )
 
-  const extensions = useMemo(() => [customKeymap, viewCapturePlugin], [viewCapturePlugin])
+  const extensions = useMemo(() => [customKeymap], [])
 
   // Handle drop event with editorView access
   const handleDropWithEditor = useCallback(
