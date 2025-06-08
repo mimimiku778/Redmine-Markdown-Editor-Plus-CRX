@@ -1,11 +1,10 @@
 import type { Logger, LogLevel } from '../types'
-import { CONFIG } from '../config'
 
 class ConsoleLogger implements Logger {
   private readonly prefix = '[Redmine Markdown]'
 
   private shouldLog(level: LogLevel): boolean {
-    if (!CONFIG.debug) {
+    if (!__DEV__) {
       return level === 'error' || level === 'warn'
     }
     return true

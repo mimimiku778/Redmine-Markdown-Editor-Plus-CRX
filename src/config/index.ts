@@ -1,7 +1,7 @@
 import type { ExtensionConfig, RedmineSelectors } from '../types'
 
 export const CONFIG: ExtensionConfig = {
-  debug: import.meta?.env?.DEV || false,
+  debug: __DEV__,
   syncInterval: 500,
   cursorSyncDelay: 10,
   overlay: {

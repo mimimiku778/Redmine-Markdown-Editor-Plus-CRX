@@ -18,8 +18,11 @@ const manifest = defineManifest({
 })
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), crx({ manifest })],
+  define: {
+    __DEV__: mode === 'development',
+  },
   // Without configuring the server, the error "WebSocket connection to 'ws://localhost/' failed" will occur.
   // https://github.com/crxjs/chrome-extension-tools/issues/746#issuecomment-1647484887
   server: {
@@ -41,4 +44,4 @@ export default defineConfig({
   build: {
     chunkSizeWarningLimit: 5000, // Increase chunk size limit to avoid warnings
   },
-})
+}))
