@@ -1,4 +1,3 @@
-import { REDMINE_SELECTORS } from '../../config'
 import { logger } from '../../utils/logger'
 
 export function findTextareas(selectors: string[]): HTMLTextAreaElement[] {
@@ -18,23 +17,4 @@ export function findTextareas(selectors: string[]): HTMLTextAreaElement[] {
   }
 }
 
-export function checkTabState(textarea: HTMLTextAreaElement): {
-  isPreviewMode: boolean
-  tabsContainer: Element | null
-} {
-  const tabsContainer = textarea.closest(REDMINE_SELECTORS.jstBlock)
-  console.log('Tabs container:', tabsContainer)
-  return tabsContainer && tabsContainer.querySelector('.tab-preview.selected')
-    ? { isPreviewMode: true, tabsContainer }
-    : { isPreviewMode: false, tabsContainer: null }
-}
 
-export function isTabClick(target: HTMLElement): boolean {
-  return (
-    target.tagName === 'A' &&
-    (target.textContent?.toLowerCase().includes('preview') ||
-      target.textContent?.toLowerCase().includes('edit') ||
-      !!target.getAttribute('onclick')?.includes('preview') ||
-      !!target.getAttribute('onclick')?.includes('edit'))
-  )
-}

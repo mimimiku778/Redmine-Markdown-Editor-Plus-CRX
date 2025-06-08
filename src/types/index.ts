@@ -18,7 +18,6 @@ export interface ProcessedTextarea {
 export interface RedmineSelectors {
   wikiEdit: string
   jstBlockTextarea: string
-  jstTabs: string
   jstBlock: string
 }
 

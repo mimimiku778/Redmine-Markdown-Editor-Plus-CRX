@@ -1,61 +1,28 @@
-import { useEffect, useState, useCallback } from 'react'
-import { checkTabState, isTabClick } from '../services'
-import { logger } from '../../utils/logger'
-
-const TAB_CHECK_DELAY = 100
+import { useEffect, useState } from 'react'
 
 export function useTabState(textarea: HTMLTextAreaElement): boolean {
   const [isPreviewMode, setIsPreviewMode] = useState(false)
 
-  const checkPreviewMode = useCallback(() => {
-    try {
-      const tabState = checkTabState(textarea)
-      setIsPreviewMode(tabState.isPreviewMode)
-      tabState.isPreviewMode &&
-        logger.debug(`Tab state updated - Preview: ${tabState.isPreviewMode}`)
-      return tabState
-    } catch (error) {
-      logger.error('Failed to check tab state', error)
-      return { isPreviewMode: false, tabsContainer: null }
-    }
-  }, [textarea])
-
   useEffect(() => {
-    // Initial check
-    const initialState = checkPreviewMode()
+    const tabsContainer = textarea.closest('.jstBlock')
+    if (!tabsContainer) return
 
-    // Watch for tab clicks
-    const handleTabClick = (event: Event) => {
-      const target = event.target as HTMLElement
-      if (isTabClick(target)) {
-        // Delay to ensure DOM has updated
-        setTimeout(checkPreviewMode, TAB_CHECK_DELAY)
-      }
+    const checkPreviewMode = () => {
+      const isPreview = !!tabsContainer.querySelector('.tab-preview.selected')
+      setIsPreviewMode(isPreview)
     }
 
-    // Setup mutation observer for dynamic tab updates
-    let observer: MutationObserver | null = null
+    checkPreviewMode()
 
-    if (initialState.tabsContainer) {
-      observer = new MutationObserver(() => {
-        checkPreviewMode()
-      })
+    const observer = new MutationObserver(checkPreviewMode)
+    observer.observe(tabsContainer, {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['class'],
+    })
 
-      observer.observe(initialState.tabsContainer, {
-        attributes: true,
-        subtree: true,
-        attributeFilter: ['class'],
-      })
-    }
-
-    // Use capture phase to catch events earlier
-    document.addEventListener('click', handleTabClick, true)
-
-    return () => {
-      document.removeEventListener('click', handleTabClick, true)
-      observer?.disconnect()
-    }
-  }, [textarea, checkPreviewMode])
+    return () => observer.disconnect()
+  }, [textarea])
 
   return isPreviewMode
 }
