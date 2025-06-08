@@ -1,4 +1,5 @@
-import { keymap, Prec } from '@codemirror/view'
+import { keymap } from '@codemirror/view'
+import { Prec } from '@codemirror/state'
 import { redo } from '@codemirror/commands'
 
 /**
