@@ -5,7 +5,6 @@ import type { Plugin } from 'unified'
 
 const remarkCollapse: Plugin<[], Root> = () => {
   return (tree: Root) => {
-    console.log('remarkCollapse:', tree)
     visit(tree, 'paragraph', (node: Paragraph, index?: number, parent?: Parent) => {
       if (!parent || typeof index !== 'number' || !('children' in parent)) return
 
