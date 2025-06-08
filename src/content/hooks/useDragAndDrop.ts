@@ -42,15 +42,16 @@ export function useDragAndDrop(): DragAndDropHandlers {
 
       files.forEach((file) => {
         const fileName = file.name
+        const encodedFileName = encodeURIComponent(fileName)
         const fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase()
 
         if (IMAGE_EXTENSIONS.includes(fileExtension)) {
           // Insert markdown image syntax for image files
-          insertTexts.push(`![](${fileName})`)
+          insertTexts.push(`![](${encodedFileName})`)
           logger.debug(`Inserting image markdown for: ${fileName}`)
         } else {
           // For non-image files, just insert the filename
-          insertTexts.push(fileName)
+          insertTexts.push(encodedFileName)
           logger.debug(`Inserting filename: ${fileName}`)
         }
       })
