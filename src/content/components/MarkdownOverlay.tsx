@@ -118,7 +118,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     [handlePaste, updateValue]
   )
 
-  logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
+  isPreviewMode && logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
 
   return (
     <div

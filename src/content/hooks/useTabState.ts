@@ -11,7 +11,7 @@ export function useTabState(textarea: HTMLTextAreaElement): boolean {
     try {
       const tabState = DOMUtils.checkTabState(textarea)
       setIsPreviewMode(tabState.isPreviewMode)
-      logger.debug(`Tab state updated - Preview: ${tabState.isPreviewMode}`)
+      tabState.isPreviewMode && logger.debug(`Tab state updated - Preview: ${tabState.isPreviewMode}`)
       return tabState
     } catch (error) {
       logger.error('Failed to check tab state', error)

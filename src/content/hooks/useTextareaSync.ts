@@ -19,8 +19,6 @@ export function useTextareaSync(textarea: HTMLTextAreaElement): TextareaSyncResu
         // Trigger input event on textarea for any listeners
         const event = new Event('input', { bubbles: true })
         textarea.dispatchEvent(event)
-
-        logger.debug('Updated textarea value from editor')
       } catch (error) {
         logger.error('Failed to update textarea value', error)
       }
