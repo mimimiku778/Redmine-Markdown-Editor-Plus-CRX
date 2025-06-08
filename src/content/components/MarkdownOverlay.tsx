@@ -7,6 +7,7 @@ import remarkBreaks from 'remark-breaks'
 import { remarkCollapse } from '../remark-plugins'
 import { ulist, olist } from '../custom-commands'
 import { useTabState, useTextareaSync, useDragAndDrop } from '../hooks'
+import { usePaste } from '../hooks/usePaste'
 import { CONFIG } from '../../config'
 import { customKeymap } from '../extensions'
 import { logger } from '../../utils/logger'
@@ -50,6 +51,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const isPreviewMode = useTabState(textarea)
   const { value, updateValue } = useTextareaSync(textarea)
   const { handleDragOver, handleDrop } = useDragAndDrop()
+  const { handlePaste } = usePaste()
   const editorViewRef = useRef<EditorView | null>(null)
 
   const wrapperStyles = useMemo<WrapperStyles>(
@@ -104,6 +106,18 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     [handleDrop, updateValue]
   )
 
+  // Handle paste event with editorView access
+  const handlePasteWithEditor = useCallback(
+    (event: React.ClipboardEvent) => {
+      if (editorViewRef.current) {
+        handlePaste(event, editorViewRef.current, updateValue)
+      } else {
+        logger.warn('EditorView not available for paste')
+      }
+    },
+    [handlePaste, updateValue]
+  )
+
   logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
 
   return (
@@ -111,6 +125,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
       data-color-mode="light"
       onDrop={handleDropWithEditor}
       onDragOver={handleDragOver}
+      onPaste={handlePasteWithEditor}
       style={wrapperStyles}
     >
       <MarkdownEditor
