@@ -4,17 +4,10 @@ import { logger } from '../../utils/logger'
 
 /** Check if current page is a Redmine page */
 export const isRedminePage = (): boolean => {
-  const indicators = [
-    '#header',
-    '.controller-issues',
-    '.controller-wiki',
-    'textarea.wiki-edit'
-  ]
-  
-  const isRedmine = indicators.some(selector => 
-    document.querySelector(selector) !== null
-  )
-  
+  const indicators = ['#header', '.controller-issues', '.controller-wiki', 'textarea.wiki-edit']
+
+  const isRedmine = indicators.some((selector) => document.querySelector(selector) !== null)
+
   logger.debug(`Page is ${isRedmine ? '' : 'not '}a Redmine page`)
   return isRedmine
 }
@@ -38,14 +31,12 @@ export const hideToolbars = (): void => {
 }
 
 /** Check if a textarea is within Redmine editing context */
-export const isTextareaInContext = (
-  textarea: HTMLTextAreaElement
-): boolean => {
+export const isTextareaInContext = (textarea: HTMLTextAreaElement): boolean => {
   const checks = [
     () => textarea.classList.contains('wiki-edit'),
     () => !!textarea.closest('.jstBlock'),
-    () => !!textarea.closest('form')?.querySelector('.jstTabs')
+    () => !!textarea.closest('form')?.querySelector('.jstTabs'),
   ]
-  
-  return checks.some(check => check())
+
+  return checks.some((check) => check())
 }

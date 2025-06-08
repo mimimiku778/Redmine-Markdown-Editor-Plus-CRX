@@ -52,44 +52,57 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const { handleDragOver, handleDrop } = useDragAndDrop()
   const editorViewRef = useRef<EditorView | null>(null)
 
-  const wrapperStyles = useMemo<WrapperStyles>(() => ({
-    width: '100%',
-    height: '100%',
-    minHeight: `${CONFIG.overlay.minHeight}px`,
-    display: isPreviewMode ? 'none' : 'block',
-  }), [isPreviewMode])
+  const wrapperStyles = useMemo<WrapperStyles>(
+    () => ({
+      width: '100%',
+      height: '100%',
+      minHeight: `${CONFIG.overlay.minHeight}px`,
+      display: isPreviewMode ? 'none' : 'block',
+    }),
+    [isPreviewMode]
+  )
 
-  const editorStyles = useMemo<EditorStyles>(() => ({
-    fontSize: '16px',
-    height: '100%',
-    minHeight: `${CONFIG.overlay.minHeight}px`,
-  }), [])
+  const editorStyles = useMemo<EditorStyles>(
+    () => ({
+      fontSize: '16px',
+      height: '100%',
+      minHeight: `${CONFIG.overlay.minHeight}px`,
+    }),
+    []
+  )
 
   const remarkPlugins = useMemo(() => [remarkBreaks, remarkCollapse], [])
-  
+
   // Create a view plugin to capture the editor view
-  const viewCapturePlugin = useMemo(() => ViewPlugin.fromClass(
-    class {
-      constructor(view: EditorView) {
-        editorViewRef.current = view
-        logger.debug('EditorView captured via ViewPlugin')
-      }
-      destroy() {
-        editorViewRef.current = null
-      }
-    }
-  ), [])
-  
+  const viewCapturePlugin = useMemo(
+    () =>
+      ViewPlugin.fromClass(
+        class {
+          constructor(view: EditorView) {
+            editorViewRef.current = view
+            logger.debug('EditorView captured via ViewPlugin')
+          }
+          destroy() {
+            editorViewRef.current = null
+          }
+        }
+      ),
+    []
+  )
+
   const extensions = useMemo(() => [customKeymap, viewCapturePlugin], [viewCapturePlugin])
 
   // Handle drop event with editorView access
-  const handleDropWithEditor = useCallback((event: React.DragEvent) => {
-    if (editorViewRef.current) {
-      handleDrop(event, editorViewRef.current, updateValue)
-    } else {
-      logger.warn('EditorView not available for drag and drop')
-    }
-  }, [handleDrop, updateValue])
+  const handleDropWithEditor = useCallback(
+    (event: React.DragEvent) => {
+      if (editorViewRef.current) {
+        handleDrop(event, editorViewRef.current, updateValue)
+      } else {
+        logger.warn('EditorView not available for drag and drop')
+      }
+    },
+    [handleDrop, updateValue]
+  )
 
   logger.debug(`Overlay render - Preview mode: ${isPreviewMode}`)
 

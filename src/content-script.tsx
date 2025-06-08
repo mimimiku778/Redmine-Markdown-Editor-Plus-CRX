@@ -36,9 +36,9 @@ const checkForNavigation = async () => {
   if (window.location.href !== currentUrl) {
     const oldUrl = currentUrl
     currentUrl = window.location.href
-    
+
     logger.info(`Navigation detected: ${oldUrl} -> ${currentUrl}`)
-    
+
     // Clean up and re-initialize after navigation
     try {
       destroy()

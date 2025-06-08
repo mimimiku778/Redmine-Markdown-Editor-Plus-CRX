@@ -25,26 +25,26 @@ export const processTextarea = (textarea: HTMLTextAreaElement): void => {
       logger.debug('Textarea cannot be processed, skipping')
       return
     }
-    
+
     const parent = textarea.parentNode
     if (!parent) {
       throw new DOMError('Textarea has no parent node')
     }
-    
+
     // Create wrapper
     const wrapper = document.createElement('div')
     textarea.style.display = 'none'
     parent.insertBefore(wrapper, textarea.nextSibling)
-    
+
     // Render overlay
     const root = createRoot(wrapper)
     root.render(React.createElement(MarkdownOverlay, { textarea }))
-    
+
     // Track processed
     const processedData: ProcessedTextarea = { textarea, wrapper, root }
     processedMap.set(textarea, processedData)
     textarea.setAttribute(MARKDOWN_OVERLAY_ATTRIBUTE, PROCESSED_ATTRIBUTE_VALUE)
-    
+
     logger.debug('Textarea processed successfully')
   } catch (error) {
     handleError(error, 'processTextarea')
@@ -59,13 +59,13 @@ export const cleanupTextarea = (textarea: HTMLTextAreaElement): void => {
       logger.debug('No processed entry found for textarea')
       return
     }
-    
+
     entry.root.unmount()
     entry.wrapper.remove()
     processedMap.delete(textarea)
     textarea.removeAttribute(MARKDOWN_OVERLAY_ATTRIBUTE)
     textarea.style.display = '' // Restore original display
-    
+
     logger.debug('Textarea cleanup completed')
   } catch (error) {
     handleError(error, 'cleanupTextarea')

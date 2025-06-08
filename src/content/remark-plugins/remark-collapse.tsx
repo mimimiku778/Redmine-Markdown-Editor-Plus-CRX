@@ -8,7 +8,7 @@ const remarkCollapse: Plugin<[], Root> = () => {
     console.log('remarkCollapse:', tree)
     visit(tree, 'paragraph', (node: Paragraph, index?: number, parent?: Parent) => {
       if (!parent || typeof index !== 'number' || !('children' in parent)) return
-      
+
       const text = toString(node).trim()
       const match = text.match(/^{{collapse(?:\((.*?)\))?$/)
       if (!match) return

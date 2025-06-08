@@ -34,22 +34,22 @@ export function useTabState(textarea: HTMLTextAreaElement): boolean {
 
     // Setup mutation observer for dynamic tab updates
     let observer: MutationObserver | null = null
-    
+
     if (initialState.tabsContainer) {
       observer = new MutationObserver(() => {
         checkPreviewMode()
       })
-      
-      observer.observe(initialState.tabsContainer, { 
-        attributes: true, 
+
+      observer.observe(initialState.tabsContainer, {
+        attributes: true,
         subtree: true,
-        attributeFilter: ['class']
+        attributeFilter: ['class'],
       })
     }
 
     // Use capture phase to catch events earlier
     document.addEventListener('click', handleTabClick, true)
-    
+
     return () => {
       document.removeEventListener('click', handleTabClick, true)
       observer?.disconnect()

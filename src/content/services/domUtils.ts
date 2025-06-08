@@ -7,12 +7,12 @@ export class DOMUtils {
   static findTextareas(selectors: string[]): HTMLTextAreaElement[] {
     try {
       const textareas = new Set<HTMLTextAreaElement>()
-      
+
       for (const selector of selectors) {
         const elements = document.querySelectorAll<HTMLTextAreaElement>(selector)
-        elements.forEach(el => textareas.add(el))
+        elements.forEach((el) => textareas.add(el))
       }
-      
+
       logger.debug(`Found ${textareas.size} unique textareas`)
       return Array.from(textareas)
     } catch (error) {
@@ -70,7 +70,7 @@ export class DOMUtils {
     if (!parent) {
       throw new DOMError('Textarea has no parent node')
     }
-    
+
     parent.insertBefore(wrapper, textarea)
     wrapper.appendChild(textarea)
   }
@@ -88,12 +88,12 @@ export class DOMUtils {
 
     for (const tabsContainer of possibleContainers) {
       const previewIndicators = this.findPreviewIndicators(tabsContainer)
-      
+
       if (previewIndicators.length > 0) {
-        const isPreviewActive = previewIndicators.some(indicator => 
+        const isPreviewActive = previewIndicators.some((indicator) =>
           this.isElementActive(indicator as HTMLElement)
         )
-        
+
         return { isPreviewMode: isPreviewActive, tabsContainer }
       }
     }
@@ -103,53 +103,51 @@ export class DOMUtils {
 
   private static findPreviewIndicators(container: Element): Element[] {
     const indicators: Element[] = []
-    
+
     // Direct preview tab selector
     const previewTab = container.querySelector(REDMINE_SELECTORS.previewTab)
     if (previewTab) indicators.push(previewTab)
-    
+
     // Selected preview tabs
     const selectedPreview = container.querySelector('li.selected a[onclick*="preview"]')
     if (selectedPreview) indicators.push(selectedPreview)
-    
+
     // Any links containing preview
-    const previewLinks = Array.from(container.querySelectorAll('a')).filter(
-      (a) => {
-        const text = a.textContent?.toLowerCase() || ''
-        const onclick = a.getAttribute('onclick') || ''
-        return text.includes('preview') || onclick.includes('preview')
-      }
-    )
+    const previewLinks = Array.from(container.querySelectorAll('a')).filter((a) => {
+      const text = a.textContent?.toLowerCase() || ''
+      const onclick = a.getAttribute('onclick') || ''
+      return text.includes('preview') || onclick.includes('preview')
+    })
     indicators.push(...previewLinks)
-    
+
     return indicators
   }
 
   private static isElementActive(element: HTMLElement): boolean {
     const activeClasses = ['selected', 'current', 'active']
-    
+
     // Check element itself
-    if (activeClasses.some(cls => element.classList.contains(cls))) {
+    if (activeClasses.some((cls) => element.classList.contains(cls))) {
       return true
     }
-    
+
     // Check parent element
     const parent = element.parentElement
-    if (parent && activeClasses.some(cls => parent.classList.contains(cls))) {
+    if (parent && activeClasses.some((cls) => parent.classList.contains(cls))) {
       return true
     }
-    
+
     return false
   }
 
   static isTabClick(target: HTMLElement): boolean {
     if (target.tagName !== 'A') return false
-    
+
     const text = target.textContent?.toLowerCase() || ''
     const onclick = target.getAttribute('onclick') || ''
-    
-    return ['preview', 'edit'].some(keyword => 
-      text.includes(keyword) || onclick.includes(keyword)
+
+    return ['preview', 'edit'].some(
+      (keyword) => text.includes(keyword) || onclick.includes(keyword)
     )
   }
 

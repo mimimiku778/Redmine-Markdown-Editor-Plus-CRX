@@ -11,32 +11,27 @@ const DEFAULT_OPTIONS: DOMObserverOptions = {
 export class DOMObserverService {
   private static observers = new Map<string, MutationObserver>()
 
-  static observe(
-    callback: DOMObserverCallback,
-    options: DOMObserverOptions = {}
-  ): () => void {
+  static observe(callback: DOMObserverCallback, options: DOMObserverOptions = {}): () => void {
     const observerId = this.generateId()
     const mergedOptions = { ...DEFAULT_OPTIONS, ...options }
 
     try {
       const observer = new MutationObserver((mutations) => {
         const addedNodes: Node[] = []
-        
+
         for (const mutation of mutations) {
           if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
             addedNodes.push(...Array.from(mutation.addedNodes))
           }
         }
-        
+
         if (addedNodes.length > 0) {
           logger.debug(`DOM Observer detected ${addedNodes.length} new nodes`)
           callback(addedNodes)
         }
       })
 
-      const target = options.selector 
-        ? document.querySelector(options.selector) 
-        : document.body
+      const target = options.selector ? document.querySelector(options.selector) : document.body
 
       if (!target) {
         throw new DOMError(`Target element not found for selector: ${options.selector}`)
