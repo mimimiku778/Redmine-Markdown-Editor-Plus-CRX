@@ -60,6 +60,13 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     [handlePaste, updateValue, editorViewRef]
   )
 
+  const onChange = useCallback(
+    (newValue: string) => {
+      textarea.value = newValue
+    },
+    [textarea]
+  )
+
   return (
     <div
       data-color-mode="light"
@@ -70,7 +77,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     >
       <MarkdownEditor
         value={value}
-        onChange={updateValue}
+        onChange={onChange}
         toolbars={DEFAULT_COMMANDS}
         previewProps={{
           remarkPlugins,
