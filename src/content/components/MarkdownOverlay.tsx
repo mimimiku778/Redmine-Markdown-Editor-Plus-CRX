@@ -56,9 +56,9 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   // Handle paste event with editorView access
   const handlePasteWithEditor = useCallback(
     (event: React.ClipboardEvent) => {
-      editorViewRef.current && handlePaste(event, editorViewRef.current, updateValue)
+      editorViewRef.current && handlePaste(event, editorViewRef.current, handleDrop, updateValue)
     },
-    [handlePaste, updateValue, editorViewRef]
+    [handlePaste, handleDrop, updateValue, editorViewRef]
   )
 
   // Update textarea value on change

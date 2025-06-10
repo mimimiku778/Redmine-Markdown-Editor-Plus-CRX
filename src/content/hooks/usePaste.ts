@@ -1,19 +1,21 @@
+import { EditorView } from '@codemirror/view'
 import { useCallback } from 'react'
-import type { EditorView } from '@codemirror/view'
 import { IMAGE_EXTENSIONS, REDMINE_SELECTORS } from '../../config'
 import { logger } from '../../utils/logger'
+import type { handleDrop } from './useDragAndDrop'
 
 interface PasteHandlers {
   handlePaste: (
     event: React.ClipboardEvent,
     editorView: EditorView,
+    handleDrop: handleDrop,
     updateValue: (value: string) => void
   ) => void
 }
 
 export function usePaste(): PasteHandlers {
   const handlePaste = useCallback(
-    (event: React.ClipboardEvent, editorView: EditorView, updateValue: (value: string) => void) => {
+    (event: React.ClipboardEvent, editorView: EditorView, handleDrop: handleDrop, updateValue: (value: string) => void) => {
       const clipboardData = event.clipboardData
       if (!clipboardData?.files?.length) {
         return
@@ -47,6 +49,8 @@ export function usePaste(): PasteHandlers {
       ;(event.target as Element)
         .closest(REDMINE_SELECTORS.box + REDMINE_SELECTORS.filedroplistner)
         ?.dispatchEvent(syntheticDragEvent)
+
+      handleDrop(syntheticDragEvent, editorView, updateValue)
     },
     []
   )

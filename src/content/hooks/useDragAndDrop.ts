@@ -3,13 +3,15 @@ import type { EditorView } from '@codemirror/view'
 import { logger } from '../../utils/logger'
 import { IMAGE_EXTENSIONS } from '../../config'
 
+export type handleDrop = (
+  event: React.DragEvent | DragEvent,
+  editorView: EditorView,
+  updateValue: (value: string) => void
+) => void
+
 interface DragAndDropHandlers {
   handleDragOver: (event: React.DragEvent) => void
-  handleDrop: (
-    event: React.DragEvent,
-    editorView: EditorView,
-    updateValue: (value: string) => void
-  ) => void
+  handleDrop: handleDrop
 }
 
 export function useDragAndDrop(): DragAndDropHandlers {
@@ -21,7 +23,7 @@ export function useDragAndDrop(): DragAndDropHandlers {
   }, [])
 
   const handleDrop = useCallback(
-    (event: React.DragEvent, editorView: EditorView, updateValue: (value: string) => void) => {
+    (event: React.DragEvent | DragEvent, editorView: EditorView, updateValue: (value: string) => void) => {
       if (!event.dataTransfer?.types.includes('Files')) {
         return
       }
