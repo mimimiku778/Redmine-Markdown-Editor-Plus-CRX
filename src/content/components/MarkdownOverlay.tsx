@@ -11,6 +11,7 @@ import { usePlugins } from '../hooks/usePlugins'
 import { useStyles } from '../hooks/useStyles'
 import { useTabState } from '../hooks/useTabState'
 import { useTextareaSync } from '../hooks/useTextareaSync'
+import { logger } from '../../utils/logger'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
@@ -60,12 +61,15 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
     [handlePaste, updateValue, editorViewRef]
   )
 
+  // Update textarea value on change
   const onChange = useCallback(
     (newValue: string) => {
       textarea.value = newValue
     },
     [textarea]
   )
+
+  logger.debug('Rendering MarkdownOverlayComponent')
 
   return (
     <div

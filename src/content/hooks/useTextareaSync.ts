@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react'
-import { logger } from '../../utils/logger'
 
 interface TextareaSyncResult {
   value: string
