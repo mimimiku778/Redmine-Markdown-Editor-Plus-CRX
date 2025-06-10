@@ -1,9 +1,12 @@
-import { REDMINE_SELECTORS, REDMINE_CLASSES } from '../../config'
+import { REDMINE_SELECTORS } from '../../config'
 import { logger } from '../../utils/logger'
 
 /** Check if current page is a Redmine page */
 export function isRedminePage(): boolean {
-  const indicators = [REDMINE_SELECTORS.header, REDMINE_SELECTORS.controllerIssues, REDMINE_SELECTORS.controllerWiki, REDMINE_SELECTORS.wikiEdit]
+  const indicators = [
+    REDMINE_SELECTORS.controllerIssues,
+    REDMINE_SELECTORS.wikiEdit,
+  ]
 
   const isRedmine = indicators.some((selector) => document.querySelector(selector) !== null)
 
@@ -34,7 +37,7 @@ export function findTextareas(): HTMLTextAreaElement[] {
 /** Check if a textarea is within Redmine editing context */
 export function isTextareaInContext(textarea: HTMLTextAreaElement): boolean {
   const checks = [
-    () => textarea.classList.contains(REDMINE_CLASSES.wikiEdit),
+    () => textarea.classList.contains(REDMINE_SELECTORS.wikiEditClass),
     () => !!textarea.closest(REDMINE_SELECTORS.jstBlock),
     () => !!textarea.closest('form')?.querySelector(REDMINE_SELECTORS.jstTabs),
   ]

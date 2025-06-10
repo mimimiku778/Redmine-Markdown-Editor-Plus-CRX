@@ -9,24 +9,20 @@ export const CONFIG = {
 }
 
 export const REDMINE_SELECTORS = {
+  wikiEditClass: '.wiki-edit',
   wikiEdit: 'textarea.wiki-edit',
   jstBlockTextarea: '.jstBlock textarea',
   jstBlock: '.jstBlock',
   tabElements: '.tab-elements',
   box: '.box',
   filedroplistner: '.filedroplistner',
-  boxFiledroplistner: '.box .filedroplistner',
   note: '.note',
-  header: '#header',
   controllerIssues: '.controller-issues',
-  controllerWiki: '.controller-wiki',
   jstTabs: '.jstTabs',
   tabPreviewSelected: '.tab-preview.selected',
 }
 
-export const REDMINE_CLASSES = {
-  wikiEdit: 'wiki-edit',
-}
-
 export const MARKDOWN_OVERLAY_ATTRIBUTE = 'data-markdown-overlay' as const
 export const PROCESSED_ATTRIBUTE_VALUE = 'true' as const
+
+export const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp']

@@ -36,6 +36,9 @@ test.describe('Redmine Setup Prerequisites Verification', () => {
     console.log('🎯 Verifying extension selectors on issue page...')
     await page.goto('/issues/1', { waitUntil: 'domcontentloaded' })
 
+    await page.locator('a[href="/journals/1/edit"]').click()
+    await page.locator('form[action="/journals/1"] .tab-preview').click()
+    
     const selectors = await page.evaluate((redmineSelectors) => {
       const result: Record<string, number> = {}
       for (const [key, selector] of Object.entries(redmineSelectors)) {

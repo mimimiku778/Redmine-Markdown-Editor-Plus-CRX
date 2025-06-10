@@ -45,22 +45,22 @@ test.describe('Redmine Markdown Editor Extension', () => {
 
     try {
       await loginAsAdmin(page)
-      
+
       console.log('🎯 Navigating to issue page...')
       await page.goto('/issues/1', { waitUntil: 'domcontentloaded' })
-      
+
       console.log('✏️ Clicking note edit button...')
-      await page.locator('#note-1 > div.contextual > span > a.icon-only.icon-edit').click()
-      
+      await page.locator('a[href="/journals/1/edit"]').click()
+
       console.log('📝 Clicking issue edit button...')
-      await page.locator('#content > div:nth-child(1) > a.icon.icon-edit').click()
-      
+      await page.locator('a[href="/issues/1/edit"]').first().click()
+
       console.log('🔧 Clicking all attributes link...')
-      await page.locator('#all_attributes > p:nth-child(6) > a').click()
-      
+      await page.locator('#all_attributes .icon.icon-edit').click()
+
       console.log('🔍 Waiting for extension to process textareas...')
       await page.waitForTimeout(1000)
-      
+
       const processedTextareas = await page
         .locator('textarea[data-markdown-overlay="true"]')
         .count()

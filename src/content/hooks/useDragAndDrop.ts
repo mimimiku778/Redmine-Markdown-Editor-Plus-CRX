@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import type { EditorView } from '@codemirror/view'
 import { logger } from '../../utils/logger'
+import { IMAGE_EXTENSIONS } from '../../config'
 
 interface DragAndDropHandlers {
   handleDragOver: (event: React.DragEvent) => void
@@ -10,8 +11,6 @@ interface DragAndDropHandlers {
     updateValue: (value: string) => void
   ) => void
 }
-
-const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp']
 
 export function useDragAndDrop(): DragAndDropHandlers {
   const handleDragOver = useCallback((event: React.DragEvent) => {
