@@ -1,0 +1,18 @@
+name: ${CONTAINER_NAME}
+
+services:
+  redmine:
+    image: redmine:latest
+    container_name: ${CONTAINER_NAME}
+    environment:
+      REDMINE_DB_ADAPTER: sqlite3
+      REDMINE_DB_DATABASE: /usr/src/redmine/sqlite/redmine.db
+    ports:
+      - "${REDMINE_PORT:-3001}:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      timeout: 30s
+      retries: 15
+      start_period: 30s
+    tmpfs:
+      - /usr/src/redmine/sqlite:exec,size=100m

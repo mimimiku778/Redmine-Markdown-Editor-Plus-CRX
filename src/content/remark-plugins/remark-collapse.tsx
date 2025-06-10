@@ -1,18 +1,19 @@
 import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
-import type { Root, Paragraph } from 'mdast'
+import type { Root, Paragraph, Parent, Html } from 'mdast'
 import type { Plugin } from 'unified'
 
 const remarkCollapse: Plugin<[], Root> = () => {
   return (tree: Root) => {
-    console.log('remarkCollapse:', tree)
-    visit(tree, 'paragraph', (node: Paragraph, _index?: number, parent?: any) => {
+    visit(tree, 'paragraph', (node: Paragraph, index?: number, parent?: Parent) => {
+      if (!parent || typeof index !== 'number' || !('children' in parent)) return
+
       const text = toString(node).trim()
       const match = text.match(/^{{collapse(?:\((.*?)\))?$/)
       if (!match) return
 
       const title = match[1] || 'Show'
-      const startIndex = parent.children.indexOf(node)
+      const startIndex = index
 
       const bodyNodes = []
       let endIndex = -1
@@ -31,7 +32,7 @@ const remarkCollapse: Plugin<[], Root> = () => {
 
       const bodyHtml = bodyNodes.map((n) => `<p>${toString(n)}</p>`).join('\n')
 
-      const htmlNode = {
+      const htmlNode: Html = {
         type: 'html',
         value: `<details><summary>${title}</summary>\n${bodyHtml}\n</details>`,
       }

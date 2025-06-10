@@ -1,4 +1,4 @@
-import type { ICommand } from '@uiw/react-markdown-editor';
+import type { ICommand } from '@uiw/react-markdown-editor'
 
 export const olist: ICommand = {
   name: 'olist',
@@ -13,52 +13,56 @@ export const olist: ICommand = {
     </svg>
   ),
   execute: (editor) => {
-    const { state, view } = editor;
-    if (!state || !view) return;
-    
-    const selection = view.state.selection.main;
-    const doc = view.state.doc;
-    
+    const { state, view } = editor
+    if (!state || !view) return
+
+    const selection = view.state.selection.main
+    const doc = view.state.doc
+
     // Get all lines in the selection
-    const startLine = doc.lineAt(selection.from);
-    const endLine = doc.lineAt(selection.to);
-    
-    let changes = [];
-    let totalOffset = 0;
-    
+    const startLine = doc.lineAt(selection.from)
+    const endLine = doc.lineAt(selection.to)
+
+    const changes = []
+    let totalOffset = 0
+
     // Process each line in the selection
     for (let lineNum = startLine.number; lineNum <= endLine.number; lineNum++) {
-      const lineInfo = doc.line(lineNum);
-      const hasListMark = lineInfo.text.match(/^\d+\. /);
-      
+      const lineInfo = doc.line(lineNum)
+      const hasListMark = lineInfo.text.match(/^\d+\. /)
+
       if (hasListMark) {
         // Remove the numbered list mark
-        const markLength = hasListMark[0].length;
+        const markLength = hasListMark[0].length
         changes.push({
           from: lineInfo.from,
           to: lineInfo.from + markLength,
-          insert: ''
-        });
-        totalOffset -= markLength;
+          insert: '',
+        })
+        totalOffset -= markLength
       } else {
         // Add numbered list mark (starting from 1)
-        const listNumber = lineNum - startLine.number + 1;
-        const mark = `${listNumber}. `;
+        const listNumber = lineNum - startLine.number + 1
+        const mark = `${listNumber}. `
         changes.push({
           from: lineInfo.from,
           to: lineInfo.from,
-          insert: mark
-        });
-        totalOffset += mark.length;
+          insert: mark,
+        })
+        totalOffset += mark.length
       }
     }
-    
+
     view.dispatch({
       changes: changes,
-      selection: { 
-        anchor: selection.from + (startLine.text.match(/^\d+\. /) ? -(startLine.text.match(/^\d+\. /)?.[0].length || 0) : `1. `.length),
-        head: selection.to + totalOffset
-      }
-    });
+      selection: {
+        anchor:
+          selection.from +
+          (startLine.text.match(/^\d+\. /)
+            ? -(startLine.text.match(/^\d+\. /)?.[0].length || 0)
+            : `1. `.length),
+        head: selection.to + totalOffset,
+      },
+    })
   },
-};
+}

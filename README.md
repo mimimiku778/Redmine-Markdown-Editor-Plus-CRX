@@ -1,54 +1,57 @@
-# React + TypeScript + Vite
+# Redmine Markdown Editor Chrome Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Chrome extension that adds a Markdown editor overlay to Redmine textareas with real-time sync and advanced editing features.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Rich Markdown editor replacing plain textareas
+- Real-time content synchronization 
+- Drag & drop file support
+- Preview mode detection
+- Custom keyboard shortcuts
+- Redmine-specific list formatting
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Clone repository
+2. `npm install`
+3. `npm run build`
+4. Load `dist/` folder in Chrome as unpacked extension
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Development
+
+```bash
+npm install        # Install dependencies
+npm run dev        # Development mode
+npm run build      # Production build
+npm run type-check # Type checking
+npm run lint       # Lint code
+npm run format     # Format code
+npm run test         # Run tests
+npm run redmine      # Start Redmine Docker container for development
+npm run redmine:down # Stop and remove Redmine Docker container
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Testing
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+E2E testing workflow (runs on `npm run test` and GitHub Actions):
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- Start latest Redmine Docker instance for testing environment
+- Load extension into Playwright Chrome browser
+- Verify extension functionality on live Redmine pages
+
+## Future Features
+
+- **Image Display in Markdown Editor**: Proper display of uploaded images in the markdown preview by resolving relative paths to Redmine attachment URLs (`/attachments/download/{ID}/filename`)
+  - Implementation approach: Extract attachment IDs from Redmine's preview API response HTML and map them to filenames for remark plugin processing
+
+## Related
+
+- [React Markdown Editor](https://github.com/uiwjs/react-markdown-editor)
+- [CRXJS Vite Plugin](https://crxjs.dev/vite-plugin)
+- [Vite](https://vitejs.dev/)
+- [Playwright](https://playwright.dev/)
+
+## License
+
+MIT

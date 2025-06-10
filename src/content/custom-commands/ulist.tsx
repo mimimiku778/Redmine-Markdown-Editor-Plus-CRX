@@ -1,4 +1,4 @@
-import type { ICommand } from '@uiw/react-markdown-editor';
+import type { ICommand } from '@uiw/react-markdown-editor'
 
 export const ulist: ICommand = {
   name: 'ulist',
@@ -13,49 +13,49 @@ export const ulist: ICommand = {
     </svg>
   ),
   execute: (editor) => {
-    const { state, view } = editor;
-    if (!state || !view) return;
-    
-    const selection = view.state.selection.main;
-    const doc = view.state.doc;
-    
+    const { state, view } = editor
+    if (!state || !view) return
+
+    const selection = view.state.selection.main
+    const doc = view.state.doc
+
     // Get all lines in the selection
-    const startLine = doc.lineAt(selection.from);
-    const endLine = doc.lineAt(selection.to);
-    
-    let changes = [];
-    let totalOffset = 0;
-    
+    const startLine = doc.lineAt(selection.from)
+    const endLine = doc.lineAt(selection.to)
+
+    const changes = []
+    let totalOffset = 0
+
     // Process each line in the selection
     for (let lineNum = startLine.number; lineNum <= endLine.number; lineNum++) {
-      const lineInfo = doc.line(lineNum);
-      const hasListMark = lineInfo.text.match(/^- /);
-      
+      const lineInfo = doc.line(lineNum)
+      const hasListMark = lineInfo.text.match(/^- /)
+
       if (hasListMark) {
         // Remove the list mark
         changes.push({
           from: lineInfo.from,
           to: lineInfo.from + 2,
-          insert: ''
-        });
-        totalOffset -= 2;
+          insert: '',
+        })
+        totalOffset -= 2
       } else {
         // Add the list mark
         changes.push({
           from: lineInfo.from,
           to: lineInfo.from,
-          insert: '- '
-        });
-        totalOffset += 2;
+          insert: '- ',
+        })
+        totalOffset += 2
       }
     }
-    
+
     view.dispatch({
       changes: changes,
-      selection: { 
+      selection: {
         anchor: selection.from + (startLine.text.match(/^- /) ? -2 : 2),
-        head: selection.to + totalOffset
-      }
-    });
+        head: selection.to + totalOffset,
+      },
+    })
   },
-};
+}
