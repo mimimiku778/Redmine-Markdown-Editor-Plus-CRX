@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { CONFIG } from '../../config'
-import { logger } from '../../utils'
+import { logger } from '../../utils/logger'
 
 export const useStyles = (isPreviewMode: boolean) => {
   const wrapperStyles = useMemo(

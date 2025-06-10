@@ -4,8 +4,8 @@ import { markdown } from '@codemirror/lang-markdown'
 import { keymap, ViewPlugin } from '@codemirror/view'
 import { indentWithTab } from '@codemirror/commands'
 import type { EditorView } from '@codemirror/view'
-import { customKeymap } from '../extensions'
 import { logger } from '../../utils/logger'
+import { customKeymap } from '../extensions/customKeymap'
 
 export const useExtensions = () => {
   const editorViewRef = useRef<EditorView | null>(null)

@@ -1,20 +1,17 @@
 import { memo, useCallback } from 'react'
 import MarkdownEditor from '@uiw/react-markdown-editor'
 import type { Commands } from '@uiw/react-markdown-editor/esm/components/ToolBar'
-import { ulist, olist } from '../custom-commands'
-import {
-  useTabState,
-  useTextareaSync,
-  useDragAndDrop,
-  useHideTabElements,
-  usePlugins,
-  useExtensions,
-  useStyles,
-} from '../hooks'
 import { usePaste } from '../hooks/usePaste'
-import { CONFIG } from '../../config'
-import { customKeymap } from '../extensions'
 import { logger } from '../../utils/logger'
+import { ulist } from '../custom-commands/ulist'
+import { olist } from '../custom-commands/olist'
+import { useDragAndDrop } from '../hooks/useDragAndDrop'
+import { useExtensions } from '../hooks/useExtensions'
+import { useHideTabElements } from '../hooks/useHideTabElements'
+import { usePlugins } from '../hooks/usePlugins'
+import { useStyles } from '../hooks/useStyles'
+import { useTabState } from '../hooks/useTabState'
+import { useTextareaSync } from '../hooks/useTextareaSync'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
