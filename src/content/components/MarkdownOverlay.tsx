@@ -48,11 +48,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   // Handle drop event with editorView access
   const handleDropWithEditor = useCallback(
     (event: React.DragEvent) => {
-      if (editorViewRef.current) {
-        handleDrop(event, editorViewRef.current, updateValue)
-      } else {
-        logger.warn('EditorView not available for drag and drop')
-      }
+      editorViewRef.current && handleDrop(event, editorViewRef.current, updateValue)
     },
     [handleDrop, updateValue, editorViewRef]
   )
@@ -60,11 +56,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   // Handle paste event with editorView access
   const handlePasteWithEditor = useCallback(
     (event: React.ClipboardEvent) => {
-      if (editorViewRef.current) {
-        handlePaste(event, editorViewRef.current, updateValue)
-      } else {
-        logger.warn('EditorView not available for paste')
-      }
+      editorViewRef.current && handlePaste(event, editorViewRef.current, updateValue)
     },
     [handlePaste, updateValue, editorViewRef]
   )
