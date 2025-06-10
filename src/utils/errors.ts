@@ -1,4 +1,4 @@
-import { ExtensionError } from '../types'
+import { ExtensionError } from '../types/index'
 import { logger } from './logger'
 
 export function handleError(error: unknown, context: string): void {

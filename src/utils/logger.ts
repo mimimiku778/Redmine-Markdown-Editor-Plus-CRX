@@ -1,9 +1,7 @@
-import type { Logger, LogLevel } from '../types'
-
-class ConsoleLogger implements Logger {
+class ConsoleLogger {
   private readonly prefix = '[Redmine Markdown]'
 
-  private shouldLog(level: LogLevel): boolean {
+  private shouldLog(level:  'debug' | 'info' | 'warn' | 'error'): boolean {
     if (!__DEV__) {
       return level === 'error' || level === 'warn'
     }
@@ -40,4 +38,4 @@ class ConsoleLogger implements Logger {
   }
 }
 
-export const logger: Logger = new ConsoleLogger()
+export const logger = new ConsoleLogger()

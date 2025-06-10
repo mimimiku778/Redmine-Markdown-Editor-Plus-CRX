@@ -1,6 +1,4 @@
-import type { ExtensionConfig, RedmineSelectors } from '../types'
-
-export const CONFIG: ExtensionConfig = {
+export const CONFIG = {
   debug: typeof __DEV__ !== 'undefined' ? __DEV__ : false,
   syncInterval: 500,
   cursorSyncDelay: 10,
@@ -10,7 +8,7 @@ export const CONFIG: ExtensionConfig = {
   },
 }
 
-export const REDMINE_SELECTORS: RedmineSelectors = {
+export const REDMINE_SELECTORS = {
   wikiEdit: 'textarea.wiki-edit',
   jstBlockTextarea: '.jstBlock textarea',
   jstBlock: '.jstBlock',

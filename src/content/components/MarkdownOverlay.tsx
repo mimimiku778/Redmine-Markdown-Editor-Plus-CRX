@@ -12,6 +12,8 @@ import {
   useStyles,
 } from '../hooks'
 import { usePaste } from '../hooks/usePaste'
+import { CONFIG } from '../../config'
+import { customKeymap } from '../extensions'
 import { logger } from '../../utils/logger'
 
 interface MarkdownOverlayProps {

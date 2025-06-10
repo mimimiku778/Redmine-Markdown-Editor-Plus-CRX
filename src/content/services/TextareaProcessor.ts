@@ -1,10 +1,10 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { MarkdownOverlay } from '../components/MarkdownOverlay'
-import { MARKDOWN_OVERLAY_ATTRIBUTE, PROCESSED_ATTRIBUTE_VALUE } from '../../config'
+import { MARKDOWN_OVERLAY_ATTRIBUTE, PROCESSED_ATTRIBUTE_VALUE } from '../../config/index'
 import { isTextareaInContext } from './RedmineService'
 import { logger } from '../../utils/logger'
-import { DOMError } from '../../types'
+import { DOMError } from '../../types/index'
 import { handleError } from '../../utils/errors'
 
 const isAlreadyProcessed = (textarea: HTMLTextAreaElement): boolean =>

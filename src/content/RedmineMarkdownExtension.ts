@@ -1,7 +1,7 @@
 import { isRedminePage, findTextareas, processTextarea } from './services'
 import { logger } from '../utils/logger'
 import { handleError } from '../utils/errors'
-import { InitializationError } from '../types'
+import { InitializationError } from '../types/index'
 
 // Module-scoped state
 let initialized = false
