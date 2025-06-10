@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
+import { REDMINE_SELECTORS } from '../../config'
 
 export function useTabState(textarea: HTMLTextAreaElement): boolean {
   const [isPreviewMode, setIsPreviewMode] = useState(false)
 
   useEffect(() => {
-    const tabsContainer = textarea.closest('.jstBlock')
+    const tabsContainer = textarea.closest(REDMINE_SELECTORS.jstBlock)
     if (!tabsContainer) return
 
     const checkPreviewMode = () => {
-      const isPreview = !!tabsContainer.querySelector('.tab-preview.selected')
+      const isPreview = !!tabsContainer.querySelector(REDMINE_SELECTORS.tabPreviewSelected)
       setIsPreviewMode(isPreview)
     }
 

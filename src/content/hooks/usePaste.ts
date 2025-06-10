@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 import type { EditorView } from '@codemirror/view'
+import { REDMINE_SELECTORS } from '../../config'
 import { logger } from '../../utils/logger'
 
 interface PasteHandlers {
@@ -51,9 +52,9 @@ export function usePaste(): PasteHandlers {
       let targetElement: Element | null = null
 
       while (currentElement && currentElement !== document.body) {
-        const boxElement = currentElement.closest('.box')
+        const boxElement = currentElement.closest(REDMINE_SELECTORS.box)
         if (boxElement) {
-          targetElement = boxElement.querySelector('.filedroplistner')
+          targetElement = boxElement.querySelector(REDMINE_SELECTORS.filedroplistner)
           if (targetElement) {
             break
           }
@@ -64,7 +65,7 @@ export function usePaste(): PasteHandlers {
       if (targetElement) {
         // Dispatch the synthetic drag event to the target element
         targetElement.dispatchEvent(syntheticDragEvent)
-        logger.debug(`Synthetic drop event dispatched to .box .filedroplistner element`)
+        logger.debug(`Synthetic drop event dispatched to ${REDMINE_SELECTORS.boxFiledroplistner} element`)
       } else {
         // Fallback: process the files directly using the same logic as useDragAndDrop
         const state = editorView.state

@@ -1,6 +1,7 @@
 import { logger } from '../utils/logger'
 import { handleError } from '../utils/errors'
 import { InitializationError } from '../types/index'
+import { REDMINE_SELECTORS } from '../config'
 import { findTextareas, isRedminePage } from './services/RedmineService'
 import { processTextarea } from './services/TextareaProcessor'
 
@@ -43,7 +44,7 @@ export async function initialize(): Promise<void> {
 }
 
 function startNoteObservers(): void {
-  const noteElements = document.querySelectorAll('.note')
+  const noteElements = document.querySelectorAll(REDMINE_SELECTORS.note)
 
   if (noteElements.length === 0) {
     logger.debug('No .note elements found to observe')
@@ -60,7 +61,7 @@ function startNoteObservers(): void {
       subtree: true,
     })
 
-    logger.debug('Started observing .note element for textarea insertion')
+    logger.debug(`Started observing ${REDMINE_SELECTORS.note} element for textarea insertion`)
   })
 }
 
@@ -85,19 +86,19 @@ function handleNoteChanges(mutations: MutationRecord[]): void {
       const element = node as Element
 
       // Check if the node itself is a textarea
-      if (element.matches('textarea.wiki-edit')) {
+      if (element.matches(REDMINE_SELECTORS.wikiEdit)) {
         newTextareas.add(element as HTMLTextAreaElement)
       }
 
       // Find textareas within the node
       const found = element.querySelectorAll<HTMLTextAreaElement>(
-        'textarea.wiki-edit, .jstBlock textarea'
+        `${REDMINE_SELECTORS.wikiEdit}, ${REDMINE_SELECTORS.jstBlockTextarea}`
       )
       found.forEach((textarea) => newTextareas.add(textarea))
     }
 
     if (newTextareas.size > 0) {
-      logger.info(`Processing ${newTextareas.size} new textareas in .note`)
+      logger.info(`Processing ${newTextareas.size} new textareas in ${REDMINE_SELECTORS.note}`)
       Array.from(newTextareas).forEach(processTextarea)
     }
   } catch (error) {
