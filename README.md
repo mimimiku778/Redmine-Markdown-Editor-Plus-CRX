@@ -55,3 +55,64 @@ E2E testing workflow (runs on `npm run test` and GitHub Actions):
 ## License
 
 MIT
+
+---
+
+# Redmine Markdown Editor Chrome拡張機能
+
+Redmineのテキストエリアにリアルタイム同期と高度な編集機能を備えたMarkdownエディターオーバーレイを追加するChrome拡張機能です。
+
+## 機能
+
+- プレーンテキストエリアを置き換えるリッチMarkdownエディター
+- リアルタイムコンテンツ同期
+- ドラッグ&ドロップファイルサポート
+- プレビューモード検出
+- カスタムキーボードショートカット
+- Redmine固有のリスト書式設定
+
+## インストール
+
+1. リポジトリをクローン
+2. `npm install`
+3. `npm run build`
+4. Chrome で `dist/` フォルダーを未パッケージ拡張機能として読み込み
+
+## 開発
+
+```bash
+npm install        # 依存関係のインストール
+npm run dev        # 開発モード
+npm run build      # プロダクションビルド
+npm run type-check # 型チェック
+npm run lint       # コードのリント
+npm run format     # コードのフォーマット
+npm run test       # テストの実行
+npm run redmine    # 開発用Redmine Dockerコンテナーの起動
+npm run redmine:down # Redmine Dockerコンテナーの停止・削除
+```
+
+## テスト
+
+E2Eテストワークフロー（`npm run test` とGitHub Actionsで実行）：
+
+- テスト環境用に最新のRedmine Dockerインスタンスを起動
+- Playwright Chromeブラウザーに拡張機能をロード
+- 実際のRedmineページで拡張機能の動作を検証
+
+## 今後の機能
+
+- **Markdownエディターでの画像表示**: 相対パスをRedmineの添付ファイルURL（`/attachments/download/{ID}/filename`）に解決することで、アップロードされた画像をMarkdownプレビューで適切に表示
+  - 実装アプローチ: RedmineのプレビューAPI応答HTMLから添付ファイルIDを抽出し、remarkプラグイン処理用にファイル名にマッピング
+  - もしくはSession Storageにアップロードした画像を保持してプレビューで表示する？
+
+## 関連
+
+- [React Markdown Editor](https://github.com/uiwjs/react-markdown-editor)
+- [CRXJS Vite Plugin](https://crxjs.dev/vite-plugin)
+- [Vite](https://vitejs.dev/)
+- [Playwright](https://playwright.dev/)
+
+## ライセンス
+
+MIT

@@ -15,7 +15,7 @@ export const useStyles = (isPreviewMode: boolean) => {
 
   const editorStyles = useMemo(
     () => ({
-      fontSize: '16px',
+      fontSize: 'inherit',
       height: '100%',
       minHeight: `${CONFIG.overlay.minHeight}px`,
     }),
