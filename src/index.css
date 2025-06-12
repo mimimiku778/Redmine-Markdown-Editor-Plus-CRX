@@ -1,13 +1,3 @@
-.md-editor-toolbar button {
-  width: 32px !important;
-  height: 32px !important;
-}
-
-.md-editor-toolbar button svg {
-  width: 17px !important;
-  height: 17px !important;
-}
-
 .wmde-markdown h1,
 .wmde-markdown h2 {
   border-bottom: 0 !important;
