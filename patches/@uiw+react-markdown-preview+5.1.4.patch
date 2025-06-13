@@ -1,5 +1,5 @@
 diff --git a/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css b/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
-index 7c28cbe..09fb79a 100644
+index 7c28cbe..f78d379 100644
 --- a/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
 +++ b/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
 @@ -212,7 +212,6 @@ body[data-color-mode*='light'] {
@@ -10,15 +10,18 @@ index 7c28cbe..09fb79a 100644
    word-wrap: break-word;
    color: var(--color-fg-default);
    background-color: var(--color-canvas-default);
-@@ -253,7 +252,6 @@ body[data-color-mode*='light'] {
-   margin: 0.67em 0;
-   font-weight: 600;
-   padding-bottom: 0.3em;
+@@ -250,22 +249,15 @@ body[data-color-mode*='light'] {
+   font-style: italic;
+ }
+ .wmde-markdown h1 {
+-  margin: 0.67em 0;
+-  font-weight: 600;
+-  padding-bottom: 0.3em;
 -  font-size: 2em;
-   border-bottom: 1px solid var(--color-border-muted);
+-  border-bottom: 1px solid var(--color-border-muted);
  }
  .wmde-markdown mark {
-@@ -261,11 +259,9 @@ body[data-color-mode*='light'] {
+   background-color: var(--color-attention-subtle);
    color: var(--color-text-primary);
  }
  .wmde-markdown small {
@@ -30,7 +33,7 @@ index 7c28cbe..09fb79a 100644
    line-height: 0;
    position: relative;
    vertical-align: baseline;
-@@ -288,7 +284,6 @@ body[data-color-mode*='light'] {
+@@ -288,7 +280,6 @@ body[data-color-mode*='light'] {
  .wmde-markdown pre,
  .wmde-markdown samp {
    font-family: monospace, monospace;
@@ -38,7 +41,7 @@ index 7c28cbe..09fb79a 100644
  }
  .wmde-markdown figure {
    margin: 1em 40px;
-@@ -401,10 +396,6 @@ body[data-color-mode*='light'] {
+@@ -401,10 +392,7 @@ body[data-color-mode*='light'] {
  .wmde-markdown h4,
  .wmde-markdown h5,
  .wmde-markdown h6 {
@@ -46,10 +49,11 @@ index 7c28cbe..09fb79a 100644
 -  margin-bottom: 16px;
 -  font-weight: 600;
 -  line-height: 1.25;
++  
  }
  .wmde-markdown td,
  .wmde-markdown th {
-@@ -435,33 +426,16 @@ body[data-color-mode*='light'] {
+@@ -435,33 +423,16 @@ body[data-color-mode*='light'] {
  .wmde-markdown h4,
  .wmde-markdown h5,
  .wmde-markdown h6 {

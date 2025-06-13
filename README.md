@@ -30,6 +30,20 @@ npm run format     # Format code
 npm run test         # Run tests
 npm run redmine      # Start Redmine Docker container for development
 npm run redmine:down # Stop and remove Redmine Docker container
+npm run update:patches # Update patches from patches/markdown-fix.css
+```
+
+## CSS Patches
+
+This project uses patches to customize the styling of the `@uiw/react-markdown-preview` package for better integration with Redmine's styles:
+
+- `patches/markdown-fix.css` - Modified CSS file with Redmine-optimized styles
+- `patches/@uiw+react-markdown-preview+*.patch` - Auto-generated patch file
+
+To update the patch after modifying `patches/markdown-fix.css`:
+
+```bash
+npm run update:patches
 ```
 
 ## Testing
@@ -90,6 +104,20 @@ npm run format     # コードのフォーマット
 npm run test       # テストの実行
 npm run redmine    # 開発用Redmine Dockerコンテナーの起動
 npm run redmine:down # Redmine Dockerコンテナーの停止・削除
+npm run update:patches # patches/markdown-fix.cssからパッチを更新
+```
+
+## CSSパッチ
+
+このプロジェクトでは、`@uiw/react-markdown-preview`パッケージのスタイルをRedmineとより良く統合するためにパッチを使用しています：
+
+- `patches/markdown-fix.css` - Redmine最適化スタイルを含む修正済みCSSファイル
+- `patches/@uiw+react-markdown-preview+*.patch` - 自動生成されるパッチファイル
+
+`patches/markdown-fix.css`を変更した後にパッチを更新するには：
+
+```bash
+npm run update:patches
 ```
 
 ## テスト
