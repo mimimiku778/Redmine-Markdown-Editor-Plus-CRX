@@ -85,6 +85,7 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
         toolbars={DEFAULT_COMMANDS}
         previewProps={{
           remarkPlugins,
+          className: 'wiki',
         }}
         style={editorStyles}
         reExtensions={extensions}
