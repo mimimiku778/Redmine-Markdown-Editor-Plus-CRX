@@ -1,6 +1,5 @@
 import { initialize } from './content/RedmineMarkdownExtension'
 import { logger } from './utils/logger'
-import './index.css'
 
 // Initialize the extension when ready
 async function initExtension(): Promise<void> {

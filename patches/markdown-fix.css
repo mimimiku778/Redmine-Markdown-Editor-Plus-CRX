@@ -249,10 +249,6 @@ body[data-color-mode*='light'] {
   font-style: italic;
 }
 .wmde-markdown h1 {
-  margin: 0.67em 0;
-  font-weight: 600;
-  padding-bottom: 0.3em;
-  border-bottom: 1px solid var(--color-border-muted);
 }
 .wmde-markdown mark {
   background-color: var(--color-attention-subtle);
@@ -396,6 +392,7 @@ body[data-color-mode*='light'] {
 .wmde-markdown h4,
 .wmde-markdown h5,
 .wmde-markdown h6 {
+  
 }
 .wmde-markdown td,
 .wmde-markdown th {
