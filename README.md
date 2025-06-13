@@ -1,15 +1,14 @@
-# Redmine Markdown Editor Chrome Extension
+# Redmine Markdown Editor Plus
 
-Chrome extension that adds a Markdown editor overlay to Redmine textareas with real-time sync and advanced editing features.
+A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine textareas with syntax highlighting, live preview, and enhanced editing capabilities.
 
 ## Features
 
-- Rich Markdown editor replacing plain textareas
-- Real-time content synchronization 
-- Drag & drop file support
-- Preview mode detection
-- Custom keyboard shortcuts
-- Redmine-specific list formatting
+- **Rich Markdown Editor**: Replaces plain textareas with a powerful Markdown editor
+- **Drag & Drop Support**: Easy file uploads with drag and drop functionality
+- **Live Preview**: Instant preview of Markdown content
+- **Custom Shortcuts**: Keyboard shortcuts for enhanced productivity
+- **Seamless Integration**: Non-intrusive overlay that preserves Redmine's native functionality
 
 ## Installation
 
@@ -72,18 +71,17 @@ MIT
 
 ---
 
-# Redmine Markdown Editor Chrome拡張機能
+# Redmine Markdown エディター Plus
 
-Redmineのテキストエリアにリアルタイム同期と高度な編集機能を備えたMarkdownエディターオーバーレイを追加するChrome拡張機能です。
+RedmineのテキストエリアにCodeMirrorベースのMarkdownエディターを追加し、シンタックスハイライト、ライブプレビュー、高度な編集機能を提供するChrome拡張機能です。
 
 ## 機能
 
 - プレーンテキストエリアを置き換えるリッチMarkdownエディター
-- リアルタイムコンテンツ同期
 - ドラッグ&ドロップファイルサポート
-- プレビューモード検出
+- ライブプレビュー機能
 - カスタムキーボードショートカット
-- Redmine固有のリスト書式設定
+- Redmineとのシームレスな統合
 
 ## インストール
 
