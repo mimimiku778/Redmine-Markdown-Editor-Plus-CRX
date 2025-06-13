@@ -1,5 +1,5 @@
 diff --git a/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx b/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx
-index d14d6bb..45d115e 100644
+index d14d6bb..d59926d 100644
 --- a/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx
 +++ b/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx
 @@ -12,6 +12,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
@@ -10,7 +10,7 @@ index d14d6bb..45d115e 100644
    const fullRef = useRef(full);
    const entriesHandle: ResizeObserverCallback = (entries: ResizeObserverEntry[]) => {
      for (const entry of entries) {
-@@ -57,10 +58,17 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
+@@ -57,10 +58,18 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
      if (!document) return;
      if (editorProps && editorProps.container && editorProps.container.current && editorProps.editor) {
        const container = editorProps.container.current;
@@ -18,6 +18,7 @@ index d14d6bb..45d115e 100644
 +      if (full) {
 +        // Save current scroll position before hiding overflow
 +        scrollPosition.current = { x: window.scrollX, y: window.scrollY };
++        console.log('scrollPosition', scrollPosition.current);
 +        document.body.style.overflow = 'hidden';
 +      } else {
 +        // Restore overflow and scroll position
@@ -31,11 +32,12 @@ index d14d6bb..45d115e 100644
        if (container && full) {
          container.style.zIndex = '999';
          container.style.position = 'fixed';
-@@ -74,6 +82,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
+@@ -74,6 +83,8 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
          container.style.bottom = 'initial';
          container.style.left = 'initial';
          container.style.right = 'initial';
 +        window.scrollTo(scrollPosition.current.x, scrollPosition.current.y);
++        console.log('scrollPosition', scrollPosition.current);
        }
      }
    }, [full, editorProps]);
