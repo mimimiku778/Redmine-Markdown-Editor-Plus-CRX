@@ -65,11 +65,10 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
       } else {
         // Restore overflow and scroll position
         document.body.style.overflow = 'initial';
-        window.scrollTo(scrollPosition.current.x, scrollPosition.current.y);
       }
       full
-        ? document.body.classList.add(`${editorProps.prefixCls}-fullscreen`)
-        : document.body.classList.remove(`${editorProps.prefixCls}-fullscreen`);
+      ? document.body.classList.add(`${editorProps.prefixCls}-fullscreen`)
+      : document.body.classList.remove(`${editorProps.prefixCls}-fullscreen`);
       if (container && full) {
         container.style.zIndex = '999';
         container.style.position = 'fixed';
@@ -83,6 +82,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
         container.style.bottom = 'initial';
         container.style.left = 'initial';
         container.style.right = 'initial';
+        window.scrollTo(scrollPosition.current.x, scrollPosition.current.y);
       }
     }
   }, [full, editorProps]);
