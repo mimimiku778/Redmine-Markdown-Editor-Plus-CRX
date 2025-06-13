@@ -1,5 +1,5 @@
 import type { ICommand, IMarkdownEditor, ToolBarProps } from '@uiw/react-markdown-editor';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 interface FullscreenButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   command: ICommand;
@@ -13,7 +13,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
   const [full, setFull] = useState(false);
   const scrollPosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const fullRef = useRef(full);
-  const entriesHandle: ResizeObserverCallback = (entries: ResizeObserverEntry[]) => {
+  const entriesHandle: ResizeObserverCallback = useCallback((entries: ResizeObserverEntry[]) => {
     for (const entry of entries) {
       if (!$height.current) {
         $height.current = entry.target.clientHeight;
@@ -28,7 +28,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
     }
     robserver.current?.disconnect();
     robserver.current = undefined;
-  };
+  }, [editorProps.editor]);
 
   const robserver = useRef<ResizeObserver | undefined>(new ResizeObserver(entriesHandle));
 
@@ -87,7 +87,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
   }, [full, editorProps]);
 
   const click = (evn: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    let isFull = !full;
+    const isFull = !full;
     fullRef.current = isFull;
     setFull(isFull);
     onClick?.(evn, isFull);
@@ -100,6 +100,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
   );
 };
 
+/* eslint react-refresh/only-export-components : 0 */
 export const fullscreen: ICommand = {
   name: 'fullscreen',
   keyCommand: 'fullscreen',
