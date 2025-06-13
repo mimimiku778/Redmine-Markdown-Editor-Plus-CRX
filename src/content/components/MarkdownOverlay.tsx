@@ -13,6 +13,7 @@ import { useTabState } from '../hooks/useTabState'
 import { useTextareaSync } from '../hooks/useTextareaSync'
 import { logger } from '../../utils/logger'
 import { fullscreen } from '../custom-commands/fullscreen'
+import { zoom } from '../custom-commands/zoom'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
@@ -38,6 +39,7 @@ const toolbars: Commands[] = [
 
 const toolbarsMode: Commands[] = [
   'preview',
+  zoom,
   fullscreen,
 ]
 
