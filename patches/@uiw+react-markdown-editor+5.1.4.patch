@@ -1,0 +1,29 @@
+diff --git a/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx b/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx
+index original..modified 100644
+--- a/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx
++++ b/node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx
+@@ -12,6 +12,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
+   const { editorProps, command, onClick, ...reset } = props;
+   const $height = useRef<number>(0);
+   const [full, setFull] = useState(false);
++  const scrollPosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+   const fullRef = useRef(full);
+   const entriesHandle: ResizeObserverCallback = (entries: ResizeObserverEntry[]) => {
+     for (const entry of entries) {
+@@ -57,7 +58,15 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
+     if (!document) return;
+     if (editorProps && editorProps.container && editorProps.container.current && editorProps.editor) {
+       const container = editorProps.container.current;
+-      document.body.style.overflow = full ? 'hidden' : 'initial';
++      if (full) {
++        // Save current scroll position before hiding overflow
++        scrollPosition.current = { x: window.scrollX, y: window.scrollY };
++        document.body.style.overflow = 'hidden';
++      } else {
++        // Restore overflow and scroll position
++        document.body.style.overflow = 'initial';
++        window.scrollTo(scrollPosition.current.x, scrollPosition.current.y);
++      }
+       full
+         ? document.body.classList.add(`${editorProps.prefixCls}-fullscreen`)
+         : document.body.classList.remove(`${editorProps.prefixCls}-fullscreen`);
