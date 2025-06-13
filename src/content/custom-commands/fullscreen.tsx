@@ -1,6 +1,5 @@
+import type { ICommand, IMarkdownEditor, ToolBarProps } from '@uiw/react-markdown-editor';
 import React, { useEffect, useRef, useState } from 'react';
-import { ICommand } from '.';
-import { IMarkdownEditor, ToolBarProps } from '..';
 
 interface FullscreenButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   command: ICommand;
@@ -61,7 +60,6 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
       if (full) {
         // Save current scroll position before hiding overflow
         scrollPosition.current = { x: window.scrollX, y: window.scrollY };
-        console.log('scrollPosition', scrollPosition.current);
         document.body.style.overflow = 'hidden';
       } else {
         // Restore overflow and scroll position
@@ -84,7 +82,6 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
         container.style.left = 'initial';
         container.style.right = 'initial';
         window.scrollTo(scrollPosition.current.x, scrollPosition.current.y);
-        console.log('scrollPosition', scrollPosition.current);
       }
     }
   }, [full, editorProps]);

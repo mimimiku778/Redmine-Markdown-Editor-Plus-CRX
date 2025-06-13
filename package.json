@@ -16,8 +16,7 @@
     "redmine": "./tests/scripts/run-redmine.sh",
     "redmine:down": "./tests/scripts/stop-redmine.sh",
     "postinstall": "patch-package",
-    "update:css-patches": "npm install @uiw/react-markdown-preview --force && cp patches/markdown-fix.css node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css && rm -f patches/@uiw+react-markdown-preview+*.patch && npx patch-package @uiw/react-markdown-preview",
-    "update:editor-patches": "npm install @uiw/react-markdown-editor --force && cp patches/fullscreen-fix.tsx node_modules/@uiw/react-markdown-editor/src/commands/fullscreen.tsx && rm -f patches/@uiw+react-markdown-editor+*.patch && npx patch-package @uiw/react-markdown-editor"
+    "update:css-patches": "npm install @uiw/react-markdown-preview --force && cp patches/markdown-fix.css node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css && rm -f patches/@uiw+react-markdown-preview+*.patch && npx patch-package @uiw/react-markdown-preview"
   },
   "dependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.33",

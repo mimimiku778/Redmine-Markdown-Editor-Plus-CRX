@@ -12,12 +12,13 @@ import { useStyles } from '../hooks/useStyles'
 import { useTabState } from '../hooks/useTabState'
 import { useTextareaSync } from '../hooks/useTextareaSync'
 import { logger } from '../../utils/logger'
+import { fullscreen } from '../custom-commands/fullscreen'
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
 }
 
-const DEFAULT_COMMANDS: Commands[] = [
+const toolbars: Commands[] = [
   'undo',
   'redo',
   'bold',
@@ -33,6 +34,11 @@ const DEFAULT_COMMANDS: Commands[] = [
   'codeBlock',
   'link',
   'image',
+]
+
+const toolbarsMode: Commands[] = [
+  'preview',
+  fullscreen,
 ]
 
 const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
@@ -82,7 +88,8 @@ const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
       <MarkdownEditor
         value={value}
         onChange={onChange}
-        toolbars={DEFAULT_COMMANDS}
+        toolbars={toolbars}
+        toolbarsMode={toolbarsMode}
         previewProps={{
           remarkPlugins,
           className: 'wiki',
