@@ -1,5 +1,5 @@
 diff --git a/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css b/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
-index 7c28cbe..8bffb62 100644
+index 7c28cbe..bdd65a0 100644
 --- a/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
 +++ b/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
 @@ -199,7 +199,7 @@ body[data-color-mode*='light'] {
@@ -52,6 +52,17 @@ index 7c28cbe..8bffb62 100644
  }
  .wmde-markdown figure {
    margin: 1em 40px;
+@@ -309,8 +299,8 @@ body[data-color-mode*='light'] {
+   margin: 0;
+   overflow: visible;
+   font-family: inherit;
+-  font-size: inherit;
+-  line-height: inherit;
++  font-size: 14px;
++  line-height: 1.5;
+ }
+ .wmde-markdown [type='button'],
+ .wmde-markdown [type='reset'],
 @@ -401,10 +391,7 @@ body[data-color-mode*='light'] {
  .wmde-markdown h4,
  .wmde-markdown h5,
