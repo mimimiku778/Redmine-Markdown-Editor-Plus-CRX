@@ -299,8 +299,8 @@ body[data-color-mode*='light'] {
   margin: 0;
   overflow: visible;
   font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
+  font-size: 14px;
+  line-height: 1.5;
 }
 .wmde-markdown [type='button'],
 .wmde-markdown [type='reset'],

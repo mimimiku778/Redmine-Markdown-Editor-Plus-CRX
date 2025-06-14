@@ -1,7 +1,33 @@
+:root {
+  --font-size-body-2: 14px;
+  --line-height-body-dense: 1.5;
+}
+
 .md-editor-toolbar-warp {
   zoom: 1.2;
 }
 
-.cm-activeLine {
+.md-editor-content .cm-gutters {
+  height: 21px;
+  min-width: 32px;
+  padding: 0px 4px;
+  font-size: 10px;
+  font-family: monospace;
+  line-height: calc(var(--font-size-body-2) * var(--line-height-body-dense));
+}
+
+.md-editor-content .cm-activeLineGutter,
+.md-editor-content .cm-activeLine {
   background-color: inherit !important;
+}
+
+.md-editor-content .cm-gutter.cm-foldGutter {
+  display: none !important;
+}
+
+.md-editor-content .cm-content {
+  font-family:
+    Consolas, 'Liberation Mono', Menlo, Courier, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
+    Meiryo, monospace !important;
+  line-height: 1.5 !important;
 }
