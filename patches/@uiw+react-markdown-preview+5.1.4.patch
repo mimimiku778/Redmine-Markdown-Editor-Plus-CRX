@@ -1,7 +1,16 @@
 diff --git a/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css b/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
-index 7c28cbe..0486086 100644
+index 7c28cbe..8bffb62 100644
 --- a/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
 +++ b/node_modules/@uiw/react-markdown-preview/esm/styles/markdown.css
+@@ -199,7 +199,7 @@ body[data-color-mode*='light'] {
+   --color-fg-muted: #57606a;
+   --color-fg-subtle: #6e7781;
+   --color-canvas-default: #ffffff;
+-  --color-canvas-subtle: #f6f8fa;
++  --color-canvas-subtle: #ffffff;
+   --color-border-default: #d0d7de;
+   --color-border-muted: hsl(210, 18%, 87%);
+   --color-neutral-muted: rgba(175, 184, 193, 0.2);
 @@ -212,7 +212,6 @@ body[data-color-mode*='light'] {
    -webkit-text-size-adjust: 100%;
    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
