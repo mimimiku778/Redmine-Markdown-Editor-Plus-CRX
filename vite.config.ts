@@ -8,6 +8,11 @@ const manifest = defineManifest({
   description: '__MSG_ext_desc__',
   version: '1.0.0',
   default_locale: 'en',
+  icons: {
+    48: 'icons/icon-48.png',
+    64: 'icons/icon-64.png',
+    128: 'icons/icon-128.png',
+  },
   content_scripts: [
     {
       js: ['src/content-script.tsx'],

@@ -1,4 +1,4 @@
-# Redmine Markdown Editor Plus
+#　![icon](icons/icon-48.png) Redmine Markdown Editor Plus
 
 A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine textareas with syntax highlighting, live preview, and enhanced editing capabilities.
 
@@ -55,8 +55,7 @@ E2E testing workflow (runs on `npm run test` and GitHub Actions):
 
 ## Future Features
 
-- **Image Display in Markdown Editor**: Proper display of uploaded images in the markdown preview by resolving relative paths to Redmine attachment URLs (`/attachments/download/{ID}/filename`)
-  - Implementation approach: Extract attachment IDs from Redmine's preview API response HTML and map them to filenames for remark plugin processing
+- Image Display in Markdown Editor
 
 ## Related
 
@@ -71,7 +70,7 @@ MIT
 
 ---
 
-# Redmine Markdown エディター Plus
+# ![icon](icons/icon-48.png) Redmine Markdown エディター Plus
 
 RedmineのテキストエリアにCodeMirrorベースのMarkdownエディターを追加し、シンタックスハイライト、ライブプレビュー、高度な編集機能を提供するChrome拡張機能です。
 
@@ -128,9 +127,7 @@ E2Eテストワークフロー（`npm run test` とGitHub Actionsで実行）：
 
 ## 今後の機能
 
-- **Markdownエディターでの画像表示**: 相対パスをRedmineの添付ファイルURL（`/attachments/download/{ID}/filename`）に解決することで、アップロードされた画像をMarkdownプレビューで適切に表示
-  - 実装アプローチ: RedmineのプレビューAPI応答HTMLから添付ファイルIDを抽出し、remarkプラグイン処理用にファイル名にマッピング
-  - もしくはSession Storageにアップロードした画像を保持してプレビューで表示する？
+- Markdownエディターでの画像表示
 
 ## 関連
 
