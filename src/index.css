@@ -8,12 +8,11 @@
 }
 
 .md-editor-content .cm-gutters {
-  height: 21px;
-  min-width: 32px;
-  padding: 0px 4px;
+  padding: 0px 2px 0 4px;
   font-size: 10px;
   font-family: monospace;
   line-height: calc(var(--font-size-body-2) * var(--line-height-body-dense));
+  border-right: 0 !important;
 }
 
 .md-editor-content .cm-activeLineGutter,
@@ -30,4 +29,12 @@
     Consolas, 'Liberation Mono', Menlo, Courier, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans',
     Meiryo, monospace !important;
   line-height: 1.5 !important;
+}
+
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.cm-theme.md-editor-inner {
+  cursor: text;
 }

@@ -1,23 +1,21 @@
 import type { ICommand, IMarkdownEditor, ToolBarProps } from '@uiw/react-markdown-editor'
 import React, { useCallback, useState } from 'react'
 
-type ZoomLevel = 100 | 120 | 140 | 160
+const ZOOM_LEVEL: number[] = [100, 120, 140, 160]
 
 interface ZoomDropdownProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   command: ICommand
   editorProps: IMarkdownEditor & ToolBarProps
-  onZoomChange?: (zoom: ZoomLevel) => void
+  onZoomChange?: (zoom: number) => void
 }
 
 export const ZoomDropdown: React.FC<ZoomDropdownProps> = (props) => {
   const { editorProps, command, onZoomChange, ...reset } = props
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedZoom, setSelectedZoom] = useState<ZoomLevel>(100)
-
-  const zoomOptions: ZoomLevel[] = [100, 120, 140, 160]
+  const [selectedZoom, setSelectedZoom] = useState(100)
 
   const handleZoomChange = useCallback(
-    (zoom: ZoomLevel) => {
+    (zoom: number) => {
       setSelectedZoom(zoom)
       setIsOpen(false)
       onZoomChange?.(zoom)
@@ -32,8 +30,8 @@ export const ZoomDropdown: React.FC<ZoomDropdownProps> = (props) => {
         preview && (preview.style.zoom = `${zoom}%`)
         const gutters = container.querySelector('.cm-gutters') as HTMLElement
         gutters &&
-          (gutters.style.fontSize = `${14 * (zoom / 100)}px`) &&
-          (gutters.style.lineHeight = `${14 * (zoom / 100) * 1.5}%`)
+          (gutters.style.fontSize = `${10 * (zoom / 100)}px`) &&
+          (gutters.style.lineHeight = `calc(${14 * (zoom / 100)}px * 1.5)`)
       }
     },
     [onZoomChange, editorProps.container]
@@ -75,7 +73,7 @@ export const ZoomDropdown: React.FC<ZoomDropdownProps> = (props) => {
             minWidth: '80px',
           }}
         >
-          {zoomOptions.map((zoom) => (
+          {ZOOM_LEVEL.map((zoom) => (
             <button
               key={zoom}
               onClick={() => handleZoomChange(zoom)}
