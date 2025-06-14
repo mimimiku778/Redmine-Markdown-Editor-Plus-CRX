@@ -6,7 +6,7 @@ const manifest = defineManifest({
   manifest_version: 3,
   name: '__MSG_ext_name__',
   description: '__MSG_ext_desc__',
-  version: '0.0.3',
+  version: '1.0.0',
   default_locale: 'en',
   content_scripts: [
     {

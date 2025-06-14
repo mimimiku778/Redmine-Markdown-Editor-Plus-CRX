@@ -1,3 +1,7 @@
 .md-editor-toolbar-warp {
   zoom: 1.2;
 }
+
+.cm-activeLine {
+  background-color: inherit !important;
+}
