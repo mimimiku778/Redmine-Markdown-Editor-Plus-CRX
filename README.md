@@ -1,4 +1,4 @@
-#　![icon](icons/icon-48.png) Redmine Markdown Editor Plus
+# ![icon](icons/icon-48.png) Redmine Markdown Editor Plus
 
 A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine textareas with syntax highlighting, live preview, and enhanced editing capabilities.
 
