@@ -4,17 +4,22 @@ import { crx, defineManifest } from '@crxjs/vite-plugin'
 
 const manifest = defineManifest({
   manifest_version: 3,
-  name: 'Redmine Markdown Editor',
-  version: '0.0.2',
-  description: 'Markdown editor overlay for Redmine textareas',
+  name: '__MSG_ext_name__',
+  description: '__MSG_ext_desc__',
+  version: '1.0.0',
+  default_locale: 'en',
+  icons: {
+    48: 'icons/icon-48.png',
+    64: 'icons/icon-64.png',
+    128: 'icons/icon-128.png',
+  },
   content_scripts: [
     {
-      matches: ['<all_urls>'],
       js: ['src/content-script.tsx'],
-      run_at: 'document_end',
+      matches: ['*://*/issues/*'],
     },
   ],
-  host_permissions: ['<all_urls>'],
+  host_permissions: ['*://*/issues/*'],
 })
 
 // https://vite.dev/config/

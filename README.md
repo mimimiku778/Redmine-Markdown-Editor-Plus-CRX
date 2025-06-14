@@ -1,15 +1,14 @@
-# Redmine Markdown Editor Chrome Extension
+# ![icon](icons/icon-48.png) Redmine Markdown Editor Plus
 
-Chrome extension that adds a Markdown editor overlay to Redmine textareas with real-time sync and advanced editing features.
+A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine textareas with syntax highlighting, live preview, and enhanced editing capabilities.
 
 ## Features
 
-- Rich Markdown editor replacing plain textareas
-- Real-time content synchronization 
-- Drag & drop file support
-- Preview mode detection
-- Custom keyboard shortcuts
-- Redmine-specific list formatting
+- **Rich Markdown Editor**: Replaces plain textareas with a powerful Markdown editor
+- **Drag & Drop Support**: Easy file uploads with drag and drop functionality
+- **Live Preview**: Instant preview of Markdown content
+- **Custom Shortcuts**: Keyboard shortcuts for enhanced productivity
+- **Seamless Integration**: Non-intrusive overlay that preserves Redmine's native functionality
 
 ## Installation
 
@@ -30,6 +29,20 @@ npm run format     # Format code
 npm run test         # Run tests
 npm run redmine      # Start Redmine Docker container for development
 npm run redmine:down # Stop and remove Redmine Docker container
+npm run update:patches # Update patches from patches/markdown-fix.css
+```
+
+## CSS Patches
+
+This project uses patches to customize the styling of the `@uiw/react-markdown-preview` package for better integration with Redmine's styles:
+
+- `patches/markdown-fix.css` - Modified CSS file with Redmine-optimized styles
+- `patches/@uiw+react-markdown-preview+*.patch` - Auto-generated patch file
+
+To update the patch after modifying `patches/markdown-fix.css`:
+
+```bash
+npm run update:patches
 ```
 
 ## Testing
@@ -42,8 +55,7 @@ E2E testing workflow (runs on `npm run test` and GitHub Actions):
 
 ## Future Features
 
-- **Image Display in Markdown Editor**: Proper display of uploaded images in the markdown preview by resolving relative paths to Redmine attachment URLs (`/attachments/download/{ID}/filename`)
-  - Implementation approach: Extract attachment IDs from Redmine's preview API response HTML and map them to filenames for remark plugin processing
+- Image Display in Markdown Editor
 
 ## Related
 
@@ -58,18 +70,17 @@ MIT
 
 ---
 
-# Redmine Markdown Editor Chrome拡張機能
+# ![icon](icons/icon-48.png) Redmine Markdown エディター Plus
 
-Redmineのテキストエリアにリアルタイム同期と高度な編集機能を備えたMarkdownエディターオーバーレイを追加するChrome拡張機能です。
+RedmineのテキストエリアにCodeMirrorベースのMarkdownエディターを追加し、シンタックスハイライト、ライブプレビュー、高度な編集機能を提供するChrome拡張機能です。
 
 ## 機能
 
 - プレーンテキストエリアを置き換えるリッチMarkdownエディター
-- リアルタイムコンテンツ同期
 - ドラッグ&ドロップファイルサポート
-- プレビューモード検出
+- ライブプレビュー機能
 - カスタムキーボードショートカット
-- Redmine固有のリスト書式設定
+- Redmineとのシームレスな統合
 
 ## インストール
 
@@ -90,6 +101,20 @@ npm run format     # コードのフォーマット
 npm run test       # テストの実行
 npm run redmine    # 開発用Redmine Dockerコンテナーの起動
 npm run redmine:down # Redmine Dockerコンテナーの停止・削除
+npm run update:patches # patches/markdown-fix.cssからパッチを更新
+```
+
+## CSSパッチ
+
+このプロジェクトでは、`@uiw/react-markdown-preview`パッケージのスタイルをRedmineとより良く統合するためにパッチを使用しています：
+
+- `patches/markdown-fix.css` - Redmine最適化スタイルを含む修正済みCSSファイル
+- `patches/@uiw+react-markdown-preview+*.patch` - 自動生成されるパッチファイル
+
+`patches/markdown-fix.css`を変更した後にパッチを更新するには：
+
+```bash
+npm run update:patches
 ```
 
 ## テスト
@@ -102,9 +127,7 @@ E2Eテストワークフロー（`npm run test` とGitHub Actionsで実行）：
 
 ## 今後の機能
 
-- **Markdownエディターでの画像表示**: 相対パスをRedmineの添付ファイルURL（`/attachments/download/{ID}/filename`）に解決することで、アップロードされた画像をMarkdownプレビューで適切に表示
-  - 実装アプローチ: RedmineのプレビューAPI応答HTMLから添付ファイルIDを抽出し、remarkプラグイン処理用にファイル名にマッピング
-  - もしくはSession Storageにアップロードした画像を保持してプレビューで表示する？
+- Markdownエディターでの画像表示
 
 ## 関連
 

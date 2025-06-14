@@ -1,0 +1,8 @@
+{
+  "ext_name": {
+    "message": "Redmine Markdown Editor Plus"
+  },
+  "ext_desc": {
+    "message": "Adds a CodeMirror-based Markdown editor to Redmine textareas with syntax highlighting, live preview, and enhanced editing capabilities."
+  }
+}

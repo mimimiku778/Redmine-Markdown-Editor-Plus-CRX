@@ -6,6 +6,7 @@ import { indentWithTab } from '@codemirror/commands'
 import type { EditorView } from '@codemirror/view'
 import { logger } from '../../utils/logger'
 import { customKeymap } from '../extensions/customKeymap'
+import { clickToFocusExtension } from '../extensions/clickToFocus'
 
 export const useExtensions = () => {
   const editorViewRef = useRef<EditorView | null>(null)
@@ -25,9 +26,15 @@ export const useExtensions = () => {
       ),
     []
   )
-
   const extensions = useMemo(
-    () => [basicSetup, keymap.of([indentWithTab]), markdown(), customKeymap, viewCapturePlugin],
+    () => [
+      basicSetup,
+      keymap.of([indentWithTab]),
+      markdown(),
+      customKeymap,
+      clickToFocusExtension,
+      viewCapturePlugin
+    ],
     [viewCapturePlugin]
   )
 
