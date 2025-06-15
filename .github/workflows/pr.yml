@@ -1,11 +1,13 @@
 name: Pull Request Tests
 
 on:
+  push:
+    branches: [dev]
   pull_request:
-    branches: [main]
+    branches: [dev, main]
 
 jobs:
-  Release:
+  e2e-tests:
     timeout-minutes: 30
     runs-on: ubuntu-latest
 
@@ -20,7 +22,7 @@ jobs:
         run: npm run lint
 
       - name: Setup CI environment for Chrome Extension testing
-        run: ./tests/scripts/setup-ci.sh
+        run: ./.github/workflows/scripts/setup-ci.sh
 
       - name: Run E2E tests
         run: npm run test
