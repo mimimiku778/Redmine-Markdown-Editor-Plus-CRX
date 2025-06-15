@@ -2,7 +2,7 @@
 set -e
 
 # Configuration
-REPO_NAME="redmine-markdown-editor-crx"
+REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 DATE=$(date +'%y.%-m.%-d')
 
 echo "=== Creating release for $REPO_NAME ==="
