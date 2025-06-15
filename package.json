@@ -4,6 +4,7 @@
     "version": "1.0.0",
     "type": "module",
     "description": "Chrome extension that adds a CodeMirror-based Markdown editor to Redmine textareas",
+    "license": "MIT",
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",

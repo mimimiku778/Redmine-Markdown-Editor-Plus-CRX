@@ -3,7 +3,7 @@ set -e
 
 # Configuration
 REPO_NAME="redmine-markdown-editor-crx"
-DATE=$(date +'%Y.%m.%d')
+DATE=$(date +'%y.%m.%d')
 
 echo "=== Creating release for $REPO_NAME ==="
 echo "Date: $DATE"
