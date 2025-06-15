@@ -6,7 +6,7 @@ export const CONFIG = {
     minHeight: 200,
     backgroundColor: 'white',
   },
-}
+} as const
 
 export const REDMINE_SELECTORS = {
   wikiEditClass: '.wiki-edit',
@@ -20,7 +20,7 @@ export const REDMINE_SELECTORS = {
   controllerIssues: '.controller-issues',
   jstTabs: '.jstTabs',
   tabPreviewSelected: '.tab-preview.selected',
-}
+} as const
 
 export const MARKDOWN_OVERLAY_ATTRIBUTE = 'data-markdown-overlay' as const
 export const PROCESSED_ATTRIBUTE_VALUE = 'true' as const

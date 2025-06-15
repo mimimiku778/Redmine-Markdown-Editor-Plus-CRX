@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  pr-validation:
+  Release:
     timeout-minutes: 30
     runs-on: ubuntu-latest
 
@@ -16,7 +16,7 @@ jobs:
           node-version: lts/*
       - run: npm ci
 
-      - name: ESLint
+      - name: Run ESLint
         run: npm run lint
 
       - name: Install dependencies and Playwright
@@ -28,18 +28,5 @@ jobs:
           Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
-      - name: E2E tests
+      - name: Run E2E tests
         run: npm run test
-
-      - name: Comment test results
-        uses: actions/github-script@v7
-        if: always()
-        with:
-          script: |
-            const result = '${{ job.status }}' === 'success' ? '✅ テスト成功' : '❌ テスト失敗';
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `## テスト結果\n\n${result}\n\n詳細は[こちら](${context.payload.pull_request.html_url}/checks)で確認してください。`
-            })
