@@ -56,7 +56,6 @@ E2E testing workflow (runs on `npm run test` and GitHub Actions):
 
 - [React Markdown Editor](https://github.com/uiwjs/react-markdown-editor)
 - [CRXJS Vite Plugin](https://crxjs.dev/vite-plugin)
-- [Vite](https://vitejs.dev/)
 - [Playwright](https://playwright.dev/)
 
 ## License
@@ -123,7 +122,6 @@ E2Eテストワークフロー（`npm run test` とGitHub Actionsで実行）：
 
 - [React Markdown Editor](https://github.com/uiwjs/react-markdown-editor)
 - [CRXJS Vite Plugin](https://crxjs.dev/vite-plugin)
-- [Vite](https://vitejs.dev/)
 - [Playwright](https://playwright.dev/)
 
 ## ライセンス
