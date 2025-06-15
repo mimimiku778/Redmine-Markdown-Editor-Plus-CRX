@@ -1,5 +1,7 @@
 # ![icon](icons/icon-48.png) Redmine Markdown Editor Plus
 
+![screenshot](icons/screenshot.png)
+
 A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine textareas with syntax highlighting, live preview, and enhanced editing capabilities.
 
 ## Features
@@ -9,13 +11,6 @@ A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine texta
 - **Live Preview**: Instant preview of Markdown content
 - **Custom Shortcuts**: Keyboard shortcuts for enhanced productivity
 - **Seamless Integration**: Non-intrusive overlay that preserves Redmine's native functionality
-
-## Installation
-
-1. Clone repository
-2. `npm install`
-3. `npm run build`
-4. Load `dist/` folder in Chrome as unpacked extension
 
 ## Development
 
@@ -72,6 +67,8 @@ MIT
 
 # ![icon](icons/icon-48.png) Redmine Markdown エディター Plus
 
+![screenshot](icons/screenshot.png)
+
 RedmineのテキストエリアにCodeMirrorベースのMarkdownエディターを追加し、シンタックスハイライト、ライブプレビュー、高度な編集機能を提供するChrome拡張機能です。
 
 ## 機能
@@ -81,13 +78,6 @@ RedmineのテキストエリアにCodeMirrorベースのMarkdownエディター�
 - ライブプレビュー機能
 - カスタムキーボードショートカット
 - Redmineとのシームレスな統合
-
-## インストール
-
-1. リポジトリをクローン
-2. `npm install`
-3. `npm run build`
-4. Chrome で `dist/` フォルダーを未パッケージ拡張機能として読み込み
 
 ## 開発
 
