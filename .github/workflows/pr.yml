@@ -1,0 +1,45 @@
+name: Pull Request Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  pr-validation:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Install dependencies and Playwright
+        run: |
+          npx playwright install --with-deps
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      - name: Run E2E tests
+        run: npm run test
+
+      - name: Comment test results
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const result = '${{ job.status }}' === 'success' ? '✅ テスト成功' : '❌ テスト失敗';
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## テスト結果\n\n${result}\n\n詳細は[こちら](${context.payload.pull_request.html_url}/checks)で確認してください。`
+            })
