@@ -26,8 +26,6 @@ export const ZoomDropdown: React.FC<ZoomDropdownProps> = (props) => {
         container.style.fontSize = `${zoom}%`
         ;(container.querySelector('.md-editor-toolbar-warp') as HTMLElement)!.style.zoom =
           `${zoom * 1.2}%`
-        const preview = container.querySelector('.md-editor-preview') as HTMLElement
-        preview && (preview.style.zoom = `${zoom}%`)
         const gutters = container.querySelector('.cm-gutters') as HTMLElement
         gutters &&
           (gutters.style.fontSize = `${10 * (zoom / 100)}px`) &&
