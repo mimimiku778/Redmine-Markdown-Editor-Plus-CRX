@@ -18,7 +18,7 @@ import { zoom } from '../custom-commands/zoom'
 
 // Issue with Google Japanese IME Cursor Position in v6
 // https://discuss.codemirror.net/t/issue-with-google-japanese-ime-cursor-position-in-v6/8810
-;(EditorView as any).EDIT_CONTEXT = false
+;(EditorView as unknown as { EDIT_CONTEXT: boolean }).EDIT_CONTEXT = false
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
