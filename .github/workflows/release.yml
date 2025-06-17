@@ -36,7 +36,7 @@ jobs:
         with:
           tag_name: "v${{ steps.package.outputs.version }}"
           name: "Release v${{ steps.package.outputs.version }}"
-          body_path: .github/workflows/templates/release-body.md
+          body_path: ./${{ steps.package.outputs.release_body_file }}
           files: ./${{ steps.package.outputs.filename }}.zip
           draft: false
           prerelease: false
