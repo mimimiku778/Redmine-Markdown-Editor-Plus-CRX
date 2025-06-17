@@ -1,5 +1,6 @@
 import { memo, useCallback } from 'react'
 import MarkdownEditor from '@uiw/react-markdown-editor'
+import { EditorView } from '@codemirror/view'
 import type { Commands } from '@uiw/react-markdown-editor/esm/components/ToolBar'
 import { usePaste } from '../hooks/usePaste'
 import { ulist } from '../custom-commands/ulist'
@@ -14,6 +15,10 @@ import { useTextareaSync } from '../hooks/useTextareaSync'
 import { logger } from '../../utils/logger'
 import { fullscreen } from '../custom-commands/fullscreen'
 import { zoom } from '../custom-commands/zoom'
+
+// Issue with Google Japanese IME Cursor Position in v6
+// https://discuss.codemirror.net/t/issue-with-google-japanese-ime-cursor-position-in-v6/8810
+;(EditorView as any).EDIT_CONTEXT = false
 
 interface MarkdownOverlayProps {
   textarea: HTMLTextAreaElement
@@ -37,11 +42,7 @@ const toolbars: Commands[] = [
   'image',
 ]
 
-const toolbarsMode: Commands[] = [
-  'preview',
-  zoom,
-  fullscreen,
-]
+const toolbarsMode: Commands[] = ['preview', zoom, fullscreen]
 
 const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const isPreviewMode = useTabState(textarea)
