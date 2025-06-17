@@ -23,10 +23,51 @@ echo "Release number for today: $RELEASE_NUMBER"
 echo "Generated version: $VERSION"
 echo "Generated filename: $FILENAME"
 
-# Pass output to GitHub Actions
+# Get the latest merged PR title from commits
+echo "Getting latest merged PR title..."
+LATEST_PR_TITLE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+    "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls?state=closed&sort=updated&direction=desc" |
+    jq -r '[.[] | select(.merged_at != null)] | .[0].title // "No recent merged PR found"')
+
+echo "Latest merged PR title: $LATEST_PR_TITLE"
+
+# Create dynamic release body
+echo "Creating dynamic release body..."
+RELEASE_BODY_FILE="release-body-generated.md"
+
+# Create release body with appropriate section based on PR title if PR title exists
+if [ "$LATEST_PR_TITLE" != "No recent merged PR found" ]; then
+    # Determine section based on PR title prefix
+    if [[ "$LATEST_PR_TITLE" =~ ^feat: ]]; then
+        SECTION_TITLE="🆕 Features"
+    elif [[ "$LATEST_PR_TITLE" =~ ^fix: ]]; then
+        SECTION_TITLE="🐛 Bug Fixes"
+    elif [[ "$LATEST_PR_TITLE" =~ ^refactor: ]]; then
+        SECTION_TITLE="🔧 Improvements"
+    elif [[ "$LATEST_PR_TITLE" =~ ^docs: ]]; then
+        SECTION_TITLE="📝 Documentation"
+    else
+        SECTION_TITLE="✨ Changes"
+    fi
+    
+    cat > "$RELEASE_BODY_FILE" << EOF
+### $SECTION_TITLE
+- $LATEST_PR_TITLE
+
+$(cat .github/workflows/templates/release-body.md)
+EOF
+else
+    cp .github/workflows/templates/release-body.md "$RELEASE_BODY_FILE"
+fi
+
+echo "Release body created: $RELEASE_BODY_FILE"
+
+# Pass the release body file path to GitHub Actions
 if [ -n "$GITHUB_OUTPUT" ]; then
     echo "version=$VERSION" >>$GITHUB_OUTPUT
     echo "filename=$FILENAME" >>$GITHUB_OUTPUT
+    echo "pr_title=$LATEST_PR_TITLE" >>$GITHUB_OUTPUT
+    echo "release_body_file=$RELEASE_BODY_FILE" >>$GITHUB_OUTPUT
 fi
 
 # Update manifest.json version

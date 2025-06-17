@@ -4,8 +4,7 @@ import { logger } from '../../utils/logger'
 /** Check if current page is a Redmine page */
 export function isRedminePage(): boolean {
   const indicators = [
-    REDMINE_SELECTORS.controllerIssues,
-    REDMINE_SELECTORS.wikiEdit,
+    REDMINE_SELECTORS.jstBlockTextarea,
   ]
 
   const isRedmine = indicators.some((selector) => document.querySelector(selector) !== null)
