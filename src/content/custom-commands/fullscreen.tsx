@@ -59,6 +59,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
 
   useEffect(() => {
     if (!document) return
+    if (full && scrollPosition.current.y) return
     if (
       editorProps &&
       editorProps.container &&
@@ -66,6 +67,7 @@ export const FullscreenButton: React.FC<FullscreenButtonProps> = (props) => {
       editorProps.editor
     ) {
       const container = editorProps.container.current
+
       if (full) {
         // Save current scroll position before hiding overflow
         scrollPosition.current = { x: window.scrollX, y: window.scrollY }

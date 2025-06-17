@@ -46,11 +46,11 @@ const toolbarsMode: Commands[] = ['preview', zoom, fullscreen]
 
 const MarkdownOverlayComponent = ({ textarea }: MarkdownOverlayProps) => {
   const isPreviewMode = useTabState(textarea)
-  const { value, updateValue } = useTextareaSync(textarea)
+  const { extensions, editorViewRef } = useExtensions()
+  const { value, updateValue } = useTextareaSync(textarea, editorViewRef)
   const { handleDragOver, handleDrop } = useDragAndDrop()
   const { handlePaste } = usePaste()
   const { remarkPlugins } = usePlugins()
-  const { extensions, editorViewRef } = useExtensions()
   const { wrapperStyles, editorStyles } = useStyles(isPreviewMode)
   useHideTabElements(textarea)
 
