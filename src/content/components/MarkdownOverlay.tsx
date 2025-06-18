@@ -15,6 +15,12 @@ import { useTextareaSync } from '../hooks/useTextareaSync'
 import { logger } from '../../utils/logger'
 import { fullscreen } from '../custom-commands/fullscreen'
 import { zoom } from '../custom-commands/zoom'
+import { quote } from '../custom-commands/quote'
+import { unquote } from '../custom-commands/unquote'
+import { h1 } from '../custom-commands/h1'
+import { h2 } from '../custom-commands/h2'
+import { h3 } from '../custom-commands/h3'
+import { todo } from '../custom-commands/todo'
 
 // Issue with Google Japanese IME Cursor Position in v6
 // https://discuss.codemirror.net/t/issue-with-google-japanese-ime-cursor-position-in-v6/8810
@@ -29,14 +35,17 @@ const toolbars: Commands[] = [
   'redo',
   'bold',
   'italic',
-  'underline',
   'strike',
   'code',
-  'header',
+  'underline',
+  h1,
+  h2,
+  h3,
   ulist,
   olist,
-  'todo',
-  'quote',
+  todo,
+  quote,
+  unquote,
   'codeBlock',
   'link',
   'image',
