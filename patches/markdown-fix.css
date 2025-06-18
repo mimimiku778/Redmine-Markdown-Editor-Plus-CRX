@@ -210,7 +210,6 @@ body[data-color-mode*='light'] {
 }
 .wmde-markdown {
   -webkit-text-size-adjust: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   word-wrap: break-word;
   color: var(--color-fg-default);
   background-color: var(--color-canvas-default);
@@ -228,7 +227,6 @@ body[data-color-mode*='light'] {
 }
 .wmde-markdown a {
   background-color: transparent;
-  color: var(--color-accent-fg);
   text-decoration: none;
 }
 .wmde-markdown a:active,
@@ -435,8 +433,6 @@ body[data-color-mode*='light'] {
 .wmde-markdown blockquote {
   margin: 0;
   padding: 0 1em;
-  color: var(--color-fg-muted);
-  border-left: 0.25em solid var(--color-border-default);
 }
 .wmde-markdown ul,
 .wmde-markdown ol {
@@ -459,12 +455,10 @@ body[data-color-mode*='light'] {
 }
 .wmde-markdown tt,
 .wmde-markdown code {
-  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
 }
 .wmde-markdown pre {
   margin-top: 0;
   margin-bottom: 0;
-  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
   word-wrap: normal;
 }
 .wmde-markdown .octicon {
@@ -524,14 +518,10 @@ body[data-color-mode*='light'] {
 .wmde-markdown table,
 .wmde-markdown pre,
 .wmde-markdown details {
-  margin-top: 0;
-  margin-bottom: 16px;
 }
 .wmde-markdown blockquote > :first-child {
-  margin-top: 0;
 }
 .wmde-markdown blockquote > :last-child {
-  margin-bottom: 0;
 }
 .wmde-markdown sup > a::before {
   content: '[';
@@ -818,11 +808,9 @@ body[data-color-mode*='light'] {
   left: -24px;
   pointer-events: none;
   content: '';
-  border: 2px solid var(--color-accent-emphasis);
   border-radius: 6px;
 }
 .wmde-markdown .footnotes li:target {
-  color: var(--color-fg-default);
 }
 .wmde-markdown .footnotes .data-footnote-backref g-emoji {
   font-family: monospace;
@@ -862,11 +850,9 @@ body[data-color-mode*='light'] {
   display: flex;
   position: absolute;
   cursor: pointer;
-  color: var(--color-fg-default);
   top: 6px;
   right: 6px;
   border-radius: 5px;
-  background: var(--color-border-default);
   padding: 6px;
   transition: all 0.3s;
 }
@@ -880,13 +866,9 @@ body[data-color-mode*='light'] {
   visibility: visible;
 }
 .wmde-markdown pre:hover .copied:hover {
-  background: var(--color-prettylights-syntax-entity-tag);
-  color: var(--color-canvas-default);
 }
 .wmde-markdown pre:hover .copied:active,
 .wmde-markdown pre .copied.active {
-  background: var(--color-copied-active-bg);
-  color: var(--color-canvas-default);
 }
 .wmde-markdown pre .active .octicon-copy {
   display: none;
@@ -898,7 +880,6 @@ body[data-color-mode*='light'] {
   padding: 0.5rem 1em;
   color: inherit;
   margin-bottom: 16px;
-  border-left: 0.25em solid var(--borderColor-default, var(--color-border-default));
 }
 .wmde-markdown .markdown-alert > :last-child {
   margin-bottom: 0 !important;
