@@ -41,9 +41,8 @@ export const olist: ICommand = {
         })
         totalOffset -= markLength
       } else {
-        // Add numbered list mark (starting from 1)
-        const listNumber = lineNum - startLine.number + 1
-        const mark = `${listNumber}. `
+        // Add numbered list mark (always use 1. for markdown)
+        const mark = `1. `
         changes.push({
           from: lineInfo.from,
           to: lineInfo.from,
@@ -60,7 +59,7 @@ export const olist: ICommand = {
           selection.from +
           (startLine.text.match(/^\d+\. /)
             ? -(startLine.text.match(/^\d+\. /)?.[0].length || 0)
-            : `1. `.length),
+            : 3),
         head: selection.to + totalOffset,
       },
     })
