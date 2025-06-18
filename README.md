@@ -12,6 +12,12 @@ A Chrome extension that adds a CodeMirror-based Markdown editor to Redmine texta
 - **Custom Shortcuts**: Keyboard shortcuts for enhanced productivity
 - **Seamless Integration**: Non-intrusive overlay that preserves Redmine's native functionality
 
+## Installation
+
+You can install this extension directly from [Chrome Web Store](https://chromewebstore.google.com/detail/redmine-markdown-editor-pl/hifjbifflnippjadfboomaknjnfholdl).
+
+Alternatively, you can download the latest release ZIP file from [the Releases page](https://github.com/mimimiku778/Redmine-Markdown-Editor-Plus-CRX) of this repository and load it manually into Chrome as an unpacked extension.
+
 ## Development
 
 ```bash
@@ -77,6 +83,13 @@ RedmineのテキストエリアにCodeMirrorベースのMarkdownエディター�
 - ライブプレビュー機能
 - カスタムキーボードショートカット
 - Redmineとのシームレスな統合
+
+## インストール方法
+
+この拡張機能は [Chrome ウェブストア](https://chromewebstore.google.com/detail/redmine-markdown-%E3%82%A8%E3%83%87%E3%82%A3%E3%82%BF%E3%83%BC-pl/hifjbifflnippjadfboomaknjnfholdl) から直接インストールできます。
+
+または、このリポジトリの [リリースページ](https://github.com/mimimiku778/Redmine-Markdown-Editor-Plus-CRX) から最新のリリースZIPファイルをダウンロードし、Chromeの「パッケージ化されていない拡張機能」として手動で読み込むこともできます。
+
 
 ## 開発
 
