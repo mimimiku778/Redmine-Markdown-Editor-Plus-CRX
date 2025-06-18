@@ -38,3 +38,7 @@
 .cm-theme.md-editor-inner {
   cursor: text;
 }
+
+.cm-selectionMatch {
+  background-color: #99ff7780 !important;
+}
