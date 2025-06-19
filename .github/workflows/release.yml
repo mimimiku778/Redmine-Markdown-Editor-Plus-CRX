@@ -43,13 +43,12 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Upload to Chrome Web Store
         if: steps.package.outputs.skip_release != 'true'
-        uses: mobilefirstllc/cws-publish@v1
-        with:
-          refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          client_id: ${{ secrets.CHROME_CLIENT_ID }}
-          client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          extension_id: ${{ secrets.CHROME_EXTENSION_ID }}
-          zip_file: ./${{ steps.package.outputs.filename }}.zip
+        run: |
+          npx chrome-webstore-upload-cli@2 upload --source ${{ steps.package.outputs.filename }}.zip --auto-publish
+        env:
+          EXTENSION_ID: ${{ secrets.CHROME_EXTENSION_ID }}
+          CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
