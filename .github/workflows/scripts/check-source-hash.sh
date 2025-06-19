@@ -1,32 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-# Function to calculate SHA256 hash of the ZIP file
-calculate_zip_hash() {
-    if [ -f "$1" ]; then
-        sha256sum "$1" | cut -d' ' -f1
-    else
-        echo "Error: ZIP file not found: $1" >&2
-        return 1
-    fi
-}
+# Load the source hash calculation function
+source ./.github/workflows/scripts/calculate-source-hash.sh
 
-# Check if ZIP file is provided as argument
-if [ $# -eq 0 ]; then
-    echo "Error: No ZIP file provided"
-    echo "Usage: $0 <zip-file>"
-    exit 1
-fi
-
-ZIP_FILE="$1"
-
-# Calculate hash of current ZIP file
-echo "Calculating hash of ZIP file..."
-CURRENT_HASH=$(calculate_zip_hash "$ZIP_FILE")
-echo "Current ZIP hash: $CURRENT_HASH"
+# Calculate current source hash
+echo "Calculating current source hash..."
+CURRENT_HASH=$(calculate_source_hash)
+echo "Current source hash: $CURRENT_HASH"
 
 # Get the latest release
-echo "Getting hash from latest release..."
+echo "Getting latest release..."
 
 # Check if required environment variables are set
 if [ -z "${GITHUB_REPOSITORY:-}" ]; then
@@ -57,41 +41,39 @@ fi
 echo "API Response status: $API_STATUS"
 
 if [ "$API_STATUS" = "Not Found" ]; then
-    echo "No previous release found. Proceeding with new release."
+    echo "No previous release found. Proceeding with new build."
     PREVIOUS_HASH=""
 else
-    # Get the ZIP file URL from the latest release
+    # Get the latest release ZIP filename
     if command -v jq &> /dev/null; then
-        ZIP_URL=$(echo "$LATEST_RELEASE" | jq -r '.assets[0].browser_download_url // ""')
+        LATEST_FILENAME=$(echo "$LATEST_RELEASE" | jq -r '.assets[0].name // ""')
     else
-        ZIP_URL=$(echo "$LATEST_RELEASE" | python3 -c "import sys, json; d=json.load(sys.stdin); assets=d.get('assets', []); print(assets[0]['browser_download_url'] if assets else '')")
+        LATEST_FILENAME=$(echo "$LATEST_RELEASE" | python3 -c "import sys, json; d=json.load(sys.stdin); assets=d.get('assets', []); print(assets[0]['name'] if assets else '')")
     fi
     
-    if [ -z "$ZIP_URL" ]; then
-        echo "No ZIP file found in previous release. Proceeding with new release."
-        PREVIOUS_HASH=""
-    else
-        echo "Found ZIP file: $ZIP_URL"
-        echo "Downloading and calculating hash of previous release ZIP..."
+    if [ -n "$LATEST_FILENAME" ]; then
+        echo "Latest release filename: $LATEST_FILENAME"
         
-        # Download the ZIP file and calculate its hash
-        TEMP_ZIP=$(mktemp)
-        if curl -sL "$ZIP_URL" -o "$TEMP_ZIP"; then
-            PREVIOUS_HASH=$(sha256sum "$TEMP_ZIP" | cut -d' ' -f1)
-            echo "Previous release ZIP hash: $PREVIOUS_HASH"
-            rm -f "$TEMP_ZIP"
+        # Extract hash from filename (format: name-vYY.M.D.N-HASH.zip)
+        PREVIOUS_HASH=$(echo "$LATEST_FILENAME" | sed -E 's/.*-v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-([a-f0-9]+)\.zip$/\1/')
+        
+        # Validate hash format (should be 64 hex characters)
+        if [ ${#PREVIOUS_HASH} -eq 64 ] && [[ "$PREVIOUS_HASH" =~ ^[a-f0-9]+$ ]]; then
+            echo "Previous release hash: $PREVIOUS_HASH"
         else
-            echo "Failed to download previous release ZIP. Proceeding with new release."
+            echo "Could not extract valid hash from filename: $LATEST_FILENAME"
             PREVIOUS_HASH=""
-            rm -f "$TEMP_ZIP"
         fi
+    else
+        echo "No ZIP file found in previous release"
+        PREVIOUS_HASH=""
     fi
 fi
 
 # Compare hashes
 if [ -n "$PREVIOUS_HASH" ]; then
     if [ "$CURRENT_HASH" = "$PREVIOUS_HASH" ]; then
-        echo "ZIP hash matches previous release. No changes detected."
+        echo "Source hash matches previous release. No changes detected."
         
         # Output results for GitHub Actions
         if [ -n "${GITHUB_OUTPUT:-}" ]; then
@@ -101,7 +83,9 @@ if [ -n "$PREVIOUS_HASH" ]; then
         
         exit 0
     else
-        echo "ZIP hash differs from previous release. Proceeding with new release."
+        echo "Source hash differs from previous release."
+        echo "Previous: $PREVIOUS_HASH"
+        echo "Current:  $CURRENT_HASH"
     fi
 fi
 

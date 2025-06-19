@@ -22,9 +22,9 @@ jobs:
       - name: Build extension
         run: npm run build
 
-      - name: Check build hash
+      - name: Check source hash
         id: hash_check
-        run: ./.github/workflows/scripts/check-build-hash.sh
+        run: ./.github/workflows/scripts/check-source-hash.sh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
