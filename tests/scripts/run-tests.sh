@@ -22,7 +22,7 @@ cleanup() {
   echo "🧹 Cleaning up containers and volumes..."
   # Load environment variables
   source "$SCRIPT_DIR/load-env.sh"
-  
+
   if REDMINE_PORT=$REDMINE_PORT docker compose -f "$TESTS_DIR/docker-compose.test.yml" down -v --timeout 10; then
     echo "✅ Cleanup completed successfully"
   else
@@ -45,7 +45,7 @@ if [ ! -z "$EXISTING_CONTAINERS" ]; then
   echo "Running containers:"
   REDMINE_PORT=$REDMINE_PORT docker compose -f "$TESTS_DIR/docker-compose.test.yml" ps
   echo
-  
+
   # Auto-cleanup for CI or non-interactive environments
   if [ "$CI" = "true" ] || [ ! -t 0 ]; then
     echo "🛑 Auto-removing existing containers (non-interactive mode)..."
@@ -65,10 +65,13 @@ if [ ! -z "$EXISTING_CONTAINERS" ]; then
   fi
 fi
 
-# Build the extension
-echo "📦 Building extension..."
-cd "$PROJECT_ROOT"
-npm run build
+if [ "$CI" != "true" ] || [ ! -d "$PROJECT_ROOT/dist" ]; then
+  # Build the extension
+  echo "📦 Building extension..."
+  cd "$PROJECT_ROOT"
+  npm run build
+fi
+
 cd "$TESTS_DIR"
 
 # Start E2E tests with Redmine environment

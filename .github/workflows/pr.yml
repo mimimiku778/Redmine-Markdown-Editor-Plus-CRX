@@ -19,8 +19,20 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Build extension
+        run: npm run build
+
+      - name: Check build hash
+        id: hash_check
+        run: ./.github/workflows/scripts/check-build-hash.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
       - name: Setup CI environment for Chrome Extension testing
+        if: steps.hash_check.outputs.hash_matches != 'true'
         run: ./.github/workflows/scripts/setup-ci.sh
 
       - name: Run E2E tests
+        if: steps.hash_check.outputs.hash_matches != 'true'
         run: npm run test

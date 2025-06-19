@@ -8,6 +8,29 @@ DATE=$(date +'%y.%-m.%-d')
 echo "=== Creating release for $REPO_NAME ==="
 echo "Date: $DATE"
 
+# Check build hash against latest release
+echo "Checking build hash..."
+./.github/workflows/scripts/check-build-hash.sh
+HASH_CHECK_RESULT=$?
+if [ $HASH_CHECK_RESULT -eq 0 ] && [ -f "$GITHUB_OUTPUT" ]; then
+    # Read the hash check results
+    HASH_MATCHES=$(grep "hash_matches=" "$GITHUB_OUTPUT" | cut -d'=' -f2)
+    CURRENT_HASH=$(grep "current_hash=" "$GITHUB_OUTPUT" | cut -d'=' -f2)
+    
+    if [ "$HASH_MATCHES" = "true" ]; then
+        echo "Build hash matches previous release. Skipping release creation."
+        if [ -n "$GITHUB_OUTPUT" ]; then
+            echo "skip_release=true" >>$GITHUB_OUTPUT
+        fi
+        exit 0
+    fi
+else
+    # If check-build-hash.sh is not available or fails, calculate hash here
+    echo "Warning: Could not run check-build-hash.sh, calculating hash inline..."
+    CURRENT_HASH=$(find dist -type f -exec sha256sum {} \; | sort | sha256sum | cut -d' ' -f1)
+    echo "Current dist hash: $CURRENT_HASH"
+fi
+
 # Use GitHub API to get the number of releases for today
 echo "Checking existing releases for today..."
 RELEASES_TODAY=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
@@ -55,9 +78,17 @@ if [ "$LATEST_PR_TITLE" != "No recent merged PR found" ]; then
 - $LATEST_PR_TITLE
 
 $(cat .github/workflows/templates/release-body.md)
+
+---
+**Build Hash:** \`$CURRENT_HASH\`
 EOF
 else
-    cp .github/workflows/templates/release-body.md "$RELEASE_BODY_FILE"
+    cat > "$RELEASE_BODY_FILE" << EOF
+$(cat .github/workflows/templates/release-body.md)
+
+---
+**Build Hash:** \`$CURRENT_HASH\`
+EOF
 fi
 
 echo "Release body created: $RELEASE_BODY_FILE"
