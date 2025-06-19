@@ -8,6 +8,43 @@ DATE=$(date +'%y.%-m.%-d')
 echo "=== Creating release for $REPO_NAME ==="
 echo "Date: $DATE"
 
+# Calculate source hash
+echo "Calculating source hash..."
+source ./.github/workflows/scripts/calculate-source-hash.sh
+SOURCE_HASH=$(calculate_source_hash)
+echo "Source hash: $SOURCE_HASH"
+
+# Check if we need to create a release by comparing source hash with latest release
+echo "Checking if release is needed..."
+LATEST_RELEASE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+    "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest")
+
+if [ "$(echo "$LATEST_RELEASE" | python3 -c "import sys, json; d=json.load(sys.stdin); print(d.get('message', 'OK'))")" != "Not Found" ]; then
+    # Get the latest release ZIP filename
+    if command -v jq &> /dev/null; then
+        LATEST_FILENAME=$(echo "$LATEST_RELEASE" | jq -r '.assets[0].name // ""')
+    else
+        LATEST_FILENAME=$(echo "$LATEST_RELEASE" | python3 -c "import sys, json; d=json.load(sys.stdin); assets=d.get('assets', []); print(assets[0]['name'] if assets else '')")
+    fi
+    
+    if [ -n "$LATEST_FILENAME" ]; then
+        # Extract hash from filename (format: name-vYY.M.D.N-HASH.zip)
+        PREVIOUS_HASH=$(echo "$LATEST_FILENAME" | sed -E 's/.*-v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+-([a-f0-9]+)\.zip$/\1/')
+        
+        if [ ${#PREVIOUS_HASH} -eq 64 ] && [ "$PREVIOUS_HASH" = "$SOURCE_HASH" ]; then
+            echo "Source hash matches previous release ($PREVIOUS_HASH). Skipping release creation."
+            if [ -n "$GITHUB_OUTPUT" ]; then
+                echo "skip_release=true" >>$GITHUB_OUTPUT
+            fi
+            exit 0
+        else
+            echo "Source hash differs from previous release."
+            echo "Previous: $PREVIOUS_HASH"
+            echo "Current:  $SOURCE_HASH"
+        fi
+    fi
+fi
+
 # Use GitHub API to get the number of releases for today
 echo "Checking existing releases for today..."
 RELEASES_TODAY=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
@@ -17,7 +54,7 @@ RELEASES_TODAY=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
 # Release number for the same day (starting from 0)
 RELEASE_NUMBER=$RELEASES_TODAY
 VERSION="${DATE}.${RELEASE_NUMBER}"
-FILENAME="${REPO_NAME}-v${VERSION}"
+FILENAME="${REPO_NAME}-v${VERSION}-${SOURCE_HASH}"
 
 echo "Release number for today: $RELEASE_NUMBER"
 echo "Generated version: $VERSION"
@@ -41,7 +78,7 @@ if [ "$LATEST_PR_TITLE" != "No recent merged PR found" ]; then
     if [[ "$LATEST_PR_TITLE" =~ ^feat: ]]; then
         SECTION_TITLE="🆕 Features"
     elif [[ "$LATEST_PR_TITLE" =~ ^fix: ]]; then
-        SECTION_TITLE="🐛 Bug Fixes"
+        SECTION_TITLE="Fixes"
     elif [[ "$LATEST_PR_TITLE" =~ ^refactor: ]]; then
         SECTION_TITLE="🔧 Improvements"
     elif [[ "$LATEST_PR_TITLE" =~ ^docs: ]]; then
