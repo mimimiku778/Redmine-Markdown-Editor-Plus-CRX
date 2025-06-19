@@ -44,12 +44,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload to Chrome Web Store
-        if: steps.package.outputs.skip_release != 'true'
-        uses: mobilefirstllc/cws-publish@v1
-        with:
-          refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          client_id: ${{ secrets.CHROME_CLIENT_ID }}
-          client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          extension_id: ${{ secrets.CHROME_EXTENSION_ID }}
-          zip_file: ./${{ steps.package.outputs.filename }}.zip
+      #- name: Upload to Chrome Web Store
+      #  if: steps.package.outputs.skip_release != 'true'
+      #  uses: mobilefirstllc/cws-publish@v1
+      #  with:
+      #    refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      #    client_id: ${{ secrets.CHROME_CLIENT_ID }}
+      #    client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+      #    extension_id: ${{ secrets.CHROME_EXTENSION_ID }}
+      #    zip_file: ./${{ steps.package.outputs.filename }}.zip
