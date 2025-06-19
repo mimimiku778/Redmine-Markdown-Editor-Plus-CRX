@@ -13,18 +13,46 @@ echo "Current dist hash: $CURRENT_HASH"
 
 # Get the hash from the latest release
 echo "Getting hash from latest release..."
-LATEST_RELEASE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-    "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest")
+
+# Check if required environment variables are set
+if [ -z "$GITHUB_REPOSITORY" ]; then
+    # Try to detect from git remote if not set
+    GITHUB_REPOSITORY=$(git remote get-url origin | sed -E 's|.*github.com[:/](.*)\.git|\1|' || echo "")
+    if [ -z "$GITHUB_REPOSITORY" ]; then
+        echo "Error: GITHUB_REPOSITORY not set and could not be detected"
+        exit 1
+    fi
+    echo "Detected repository: $GITHUB_REPOSITORY"
+fi
+
+# Make API call with or without token
+if [ -n "$GITHUB_TOKEN" ]; then
+    LATEST_RELEASE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+        "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest")
+else
+    echo "Warning: GITHUB_TOKEN not set, using unauthenticated API call"
+    LATEST_RELEASE=$(curl -s "https://api.github.com/repos/$GITHUB_REPOSITORY/releases/latest")
+fi
+
+# Debug output
+echo "API Response status: $(echo "$LATEST_RELEASE" | jq -r '.message // "OK"')"
 
 if [ "$(echo "$LATEST_RELEASE" | jq -r '.message // empty')" = "Not Found" ]; then
     echo "No previous release found. Proceeding with new build."
     PREVIOUS_HASH=""
 else
+    # Debug: Show release body
+    RELEASE_BODY=$(echo "$LATEST_RELEASE" | jq -r '.body // ""')
+    echo "Release body length: ${#RELEASE_BODY} characters"
+    
     # Extract hash from release body if it exists
-    PREVIOUS_HASH=$(echo "$LATEST_RELEASE" | jq -r '.body // ""' | grep -oP '\*\*Build Hash:\*\* `[^`]+`' | grep -oP '`[^`]+`' | tr -d '`' || echo "")
+    PREVIOUS_HASH=$(echo "$RELEASE_BODY" | grep -oP '\*\*Build Hash:\*\* `[^`]+`' | grep -oP '`[^`]+`' | tr -d '`' || echo "")
     
     if [ -z "$PREVIOUS_HASH" ]; then
         echo "No hash found in previous release. Proceeding with new build."
+        # Debug: Show last few lines of release body
+        echo "Last 5 lines of release body:"
+        echo "$RELEASE_BODY" | tail -5
     else
         echo "Previous release hash: $PREVIOUS_HASH"
         
