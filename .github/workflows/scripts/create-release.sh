@@ -78,17 +78,9 @@ if [ "$LATEST_PR_TITLE" != "No recent merged PR found" ]; then
 - $LATEST_PR_TITLE
 
 $(cat .github/workflows/templates/release-body.md)
-
----
-**Build Hash:** \`$CURRENT_HASH\`
 EOF
 else
-    cat > "$RELEASE_BODY_FILE" << EOF
-$(cat .github/workflows/templates/release-body.md)
-
----
-**Build Hash:** \`$CURRENT_HASH\`
-EOF
+    cp .github/workflows/templates/release-body.md "$RELEASE_BODY_FILE"
 fi
 
 echo "Release body created: $RELEASE_BODY_FILE"
