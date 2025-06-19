@@ -21,7 +21,7 @@ if [ "$(echo "$LATEST_RELEASE" | jq -r '.message // empty')" = "Not Found" ]; th
     PREVIOUS_HASH=""
 else
     # Extract hash from release body if it exists
-    PREVIOUS_HASH=$(echo "$LATEST_RELEASE" | jq -r '.body // ""' | grep -oP '(?<=Build Hash: )`[^`]+`' | tr -d '`' || echo "")
+    PREVIOUS_HASH=$(echo "$LATEST_RELEASE" | jq -r '.body // ""' | grep -oP '\*\*Build Hash:\*\* `[^`]+`' | grep -oP '`[^`]+`' | tr -d '`' || echo "")
     
     if [ -z "$PREVIOUS_HASH" ]; then
         echo "No hash found in previous release. Proceeding with new build."
